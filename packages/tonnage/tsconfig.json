@@ -4,7 +4,6 @@
 	"compilerOptions": {
 		"allowJs": false,
 		"declaration": true,
-		"isolatedDeclarations": true,
 		"paths": {
 			"tonnage": ["./src/index.ts"]
 		},

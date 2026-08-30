@@ -6,7 +6,7 @@
 	"scripts": {
 		"build": "vp run -r build",
 		"change": "changeset",
-		"check": "vp check --no-fmt && tsc --noEmit",
+		"check": "vp check --no-fmt && tsc --noEmit -p packages/tonnage/tsconfig.json",
 		"fmt": "dprint fmt",
 		"fmt:check": "dprint check",
 		"lint": "vp lint",
