@@ -1,0 +1,19 @@
+{
+	"version": "0.2",
+	"useGitignore": true,
+	"ignorePaths": ["pnpm-lock.yaml"],
+	"words": [
+		"esbuild",
+		"jeremybanka",
+		"malva",
+		"minified",
+		"subpaths",
+		"tonnage",
+		"tree-shake",
+		"tree-shaken",
+		"vite",
+		"viteplus",
+		"vitest",
+		"voidzero"
+	]
+}
