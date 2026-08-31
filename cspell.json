@@ -3,6 +3,7 @@
 	"useGitignore": true,
 	"ignorePaths": ["pnpm-lock.yaml"],
 	"words": [
+		"comline",
 		"esbuild",
 		"jeremybanka",
 		"malva",

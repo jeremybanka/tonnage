@@ -29,7 +29,8 @@ The opening and closing comments use the forms
 Run `tonnage write` during development to update the README. Run
 `tonnage check` in CI to recompute the same report without writing and exit
 nonzero when the README is stale. The aliases `make` and `test` are also
-available for manifest-style scripts.
+available for manifest-style scripts. Run `tonnage --help` to see every command
+and its optional config-path argument.
 
 By default the tool reads `package.json`, writes `README.md`, and measures every
 public export except `./package.json`. Paths are resolved relative to the config
