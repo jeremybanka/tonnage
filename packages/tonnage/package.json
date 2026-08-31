@@ -1,0 +1,50 @@
+{
+	"name": "tonnage",
+	"version": "0.0.0",
+	"description": "Keep deterministic bundle size reports in README files and CI.",
+	"type": "module",
+	"license": "MPL-2.0",
+	"author": "Jeremy Banka",
+	"engines": {
+		"node": ">=22.18.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/jeremybanka/tonnage.git"
+	},
+	"files": [
+		"AGENTS.md",
+		"CHANGELOG.md",
+		"dist",
+		"src",
+		"examples",
+		"README.md",
+		"LICENSE"
+	],
+	"bin": {
+		"tonnage": "dist/cli.mjs"
+	},
+	"exports": {
+		".": {
+			"import": "./dist/index.mjs",
+			"types": "./dist/index.d.mts"
+		},
+		"./package.json": "./package.json"
+	},
+	"main": "./dist/index.mjs",
+	"types": "./dist/index.d.mts",
+	"scripts": {
+		"build": "vp pack",
+		"test": "vp test"
+	},
+	"dependencies": {
+		"esbuild": "0.28.2"
+	},
+	"devDependencies": {
+		"@types/node": "26.4.0",
+		"vitest": "npm:@voidzero-dev/vite-plus-test@0.1.24"
+	}
+}

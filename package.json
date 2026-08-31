@@ -1,0 +1,39 @@
+{
+	"name": "tonnage-workspace",
+	"license": "MPL-2.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "vp run -r build",
+		"change": "changeset",
+		"check": "vp check --no-fmt && tsc --noEmit -p packages/tonnage/tsconfig.json",
+		"fmt": "dprint fmt",
+		"fmt:check": "dprint check",
+		"lint": "vp lint",
+		"release": "pnpm build && changeset publish",
+		"spellcheck": "cspell .",
+		"staged": "vp staged",
+		"test": "vp run -r test",
+		"workflows": "./scripts/update-workflows.node.ts"
+	},
+	"devDependencies": {
+		"@changesets/cli": "3.0.1",
+		"@changesets/config": "4.0.0",
+		"@dprint/json": "0.23.0",
+		"@dprint/markdown": "0.23.2",
+		"@dprint/oxc": "0.37.0",
+		"@dprint/toml": "0.8.0",
+		"cspell": "10.1.1",
+		"dprint": "0.56.1",
+		"dprint-plugin-malva": "0.16.0",
+		"dprint-plugin-markup": "0.27.3",
+		"dprint-plugin-yaml": "0.6.0",
+		"typescript": "7.0.2",
+		"vite-plus": "0.3.0"
+	},
+	"engines": {
+		"node": "26.8.1",
+		"pnpm": "11.24.0"
+	},
+	"packageManager": "pnpm@11.24.0"
+}
