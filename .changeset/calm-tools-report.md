@@ -1,5 +1,5 @@
 ---
-"tonnage": patch
+"tonnage": minor
 ---
 
-Refactor the CLI onto Comline and add generated command help.
+Refactor the CLI onto Comline, add generated command help, and remove the `make` and `test` command aliases.

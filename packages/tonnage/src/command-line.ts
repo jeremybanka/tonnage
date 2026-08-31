@@ -13,18 +13,12 @@ const tonnageCli = cli({
 	cliDescription: `Keep deterministic bundle size reports in README files and CI.`,
 	routes: optional({
 		check: optional({ $configPath: null }),
-		make: optional({ $configPath: null }),
-		test: optional({ $configPath: null }),
 		write: optional({ $configPath: null }),
 	}),
 	routeOptions: {
 		"": ROOT_MANUAL,
 		check: CHECK_MANUAL,
 		"check/$configPath": CHECK_MANUAL,
-		make: WRITE_MANUAL,
-		"make/$configPath": WRITE_MANUAL,
-		test: CHECK_MANUAL,
-		"test/$configPath": CHECK_MANUAL,
 		write: WRITE_MANUAL,
 		"write/$configPath": WRITE_MANUAL,
 	},
@@ -43,10 +37,7 @@ export function parseTonnageCli(args: string[]): TonnageCliInvocation {
 	}
 
 	const mode =
-		inputs.case === `write` ||
-		inputs.case === `write/$configPath` ||
-		inputs.case === `make` ||
-		inputs.case === `make/$configPath`
+		inputs.case === `write` || inputs.case === `write/$configPath`
 			? `write`
 			: `check`
 	const configArgument = inputs.path[1]
