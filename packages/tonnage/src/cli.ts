@@ -4,8 +4,9 @@ import fs from "node:fs/promises"
 import path from "node:path"
 import { pathToFileURL } from "node:url"
 
+import { parseTonnageCli, renderTonnageCliHelp } from "./command-line.ts"
 import { runTonnage } from "./run.ts"
-import type { TonnageConfig, TonnageMode } from "./types.ts"
+import type { TonnageConfig } from "./types.ts"
 
 const DEFAULT_CONFIG_FILES = [
 	`tonnage.config.ts`,
@@ -14,9 +15,14 @@ const DEFAULT_CONFIG_FILES = [
 ]
 
 async function main(): Promise<void> {
-	const command = process.argv[2]
-	const mode = parseMode(command)
-	const configPath = await findConfig(process.argv[3])
+	const invocation = parseTonnageCli([`tonnage`, ...process.argv.slice(2)])
+	if (invocation.kind === `help`) {
+		process.stdout.write(renderTonnageCliHelp())
+		return
+	}
+
+	const { configArgument, mode } = invocation
+	const configPath = await findConfig(configArgument)
 	const config = await loadConfig(configPath)
 	const result = await runTonnage(config, {
 		configDirectory: path.dirname(configPath),
@@ -37,20 +43,6 @@ async function main(): Promise<void> {
 			? `Updated ${readme}.\n`
 			: `${readme} is already up to date.\n`,
 	)
-}
-
-function parseMode(command: string | undefined): TonnageMode {
-	switch (command) {
-		case `check`:
-		case `test`:
-			return `check`
-		case `make`:
-		case `write`:
-			return `write`
-		case undefined:
-		default:
-			throw new Error(`Usage: tonnage <write|check> [tonnage.config.ts]`)
-	}
 }
 
 async function findConfig(configArgument: string | undefined): Promise<string> {
