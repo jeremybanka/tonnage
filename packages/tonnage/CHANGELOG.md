@@ -1,5 +1,11 @@
 # tonnage
 
+## 0.1.2
+
+### Patch Changes
+
+- 1ca268e: Link generated reports back to the tonnage repository.
+
 ## 0.1.1
 
 ### Patch Changes
