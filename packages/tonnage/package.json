@@ -1,6 +1,6 @@
 {
 	"name": "tonnage",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Keep deterministic bundle size reports in README files and CI.",
 	"type": "module",
 	"license": "MPL-2.0",
