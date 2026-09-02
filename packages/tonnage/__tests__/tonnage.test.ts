@@ -143,7 +143,11 @@ describe(`tonnage reports`, () => {
 			(report.exports[0]?.rawBytes ?? 0) + (report.exports[1]?.rawBytes ?? 0),
 		)
 		expect(report.recipes[0]?.entry).toBe(`recipe.js`)
-		expect(renderTonnageMarkdown(report)).toContain(`shared modules`)
+		const markdown = renderTonnageMarkdown(report)
+		expect(markdown).toContain(`shared modules`)
+		expect(markdown).toContain(
+			`Report maintained with [tonnage](https://github.com/jeremybanka/tonnage).`,
+		)
 	})
 
 	test.each([

@@ -131,6 +131,11 @@ export function renderTonnageMarkdown(
 		)
 	}
 
+	lines.push(
+		``,
+		`Report maintained with [tonnage](https://github.com/jeremybanka/tonnage).`,
+	)
+
 	return lines.join(`\n`)
 }
 
