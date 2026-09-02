@@ -146,6 +146,93 @@ describe(`tonnage reports`, () => {
 		expect(renderTonnageMarkdown(report)).toContain(`shared modules`)
 	})
 
+	test.each([
+		[`neutral`, `neutral.js`],
+		[`browser`, `browser.js`],
+		[`node`, `node.js`],
+	] as const)(
+		`resolves package exports with %s conditions without a self dependency`,
+		async (platform, entry) => {
+			const fixture = await makeConditionalExportsFixture()
+			expect(
+				await pathExists(
+					path.join(
+						fixture.directory,
+						`node_modules`,
+						`@tonnage-fixture`,
+						`package`,
+					),
+				),
+			).toBe(false)
+
+			const report = await createTonnageReport(
+				{ packageJson: `package.json`, platform },
+				fixture.directory,
+			)
+			const expected = await measureImports(
+				[path.join(fixture.directory, entry)],
+				{
+					external: [`fixture-peer`],
+					platform,
+					resolveDirectory: fixture.directory,
+				},
+			)
+
+			expect(report.exports.map((row) => row.name)).toEqual([
+				`@tonnage-fixture/package`,
+				`@tonnage-fixture/package/feature`,
+			])
+			expect(report.exports[0]).toMatchObject(expected)
+		},
+	)
+
+	test(`resolves main-only packages and dependencies on the neutral platform`, async () => {
+		const fixture = await makeMainOnlyFixture()
+		expect(
+			await pathExists(
+				path.join(fixture.directory, `node_modules`, `main-only-package`),
+			),
+		).toBe(false)
+
+		const report = await createTonnageReport(
+			{ packageJson: `package.json` },
+			fixture.directory,
+		)
+
+		expect(report.exports).toHaveLength(1)
+		expect(report.exports[0]?.name).toBe(`main-only-package`)
+		expect(report.exports[0]?.rawBytes).toBeGreaterThan(100)
+	})
+
+	test.each([
+		[`browser`, `browser.js`],
+		[`node`, `node.js`],
+	] as const)(
+		`keeps esbuild's %s main-field behavior`,
+		async (platform, entry) => {
+			const fixture = await makeConditionalExportsFixture()
+			const dependencyDirectory = path.join(
+				fixture.directory,
+				`node_modules`,
+				`legacy-field-dependency`,
+			)
+
+			const measurement = await measureImports([`legacy-field-dependency`], {
+				platform,
+				resolveDirectory: fixture.directory,
+			})
+			const expected = await measureImports(
+				[path.join(dependencyDirectory, entry)],
+				{
+					platform,
+					resolveDirectory: fixture.directory,
+				},
+			)
+
+			expect(measurement).toEqual(expected)
+		},
+	)
+
 	test(`writes generated README sections and detects drift`, async () => {
 		const fixture = await makeFixture()
 		const { end, start } = tonnageMarkers(`fixture`)
@@ -223,4 +310,138 @@ async function makeFixture(): Promise<{
 	])
 
 	return { directory, entryPath, readmePath }
+}
+
+async function makeConditionalExportsFixture(): Promise<{
+	directory: string
+}> {
+	const directory = await fs.mkdtemp(
+		path.join(os.tmpdir(), `tonnage-conditional-exports-test-`),
+	)
+	const dependencyDirectory = path.join(
+		directory,
+		`node_modules`,
+		`main-only-dependency`,
+	)
+	const legacyDependencyDirectory = path.join(
+		directory,
+		`node_modules`,
+		`legacy-field-dependency`,
+	)
+	await Promise.all([
+		fs.mkdir(dependencyDirectory, { recursive: true }),
+		fs.mkdir(legacyDependencyDirectory, { recursive: true }),
+	])
+	await Promise.all([
+		fs.writeFile(
+			path.join(directory, `package.json`),
+			JSON.stringify({
+				exports: {
+					".": {
+						browser: `./browser.js`,
+						node: `./node.js`,
+						default: `./neutral.js`,
+					},
+					"./feature": `./feature.js`,
+				},
+				name: `@tonnage-fixture/package`,
+				peerDependencies: { "fixture-peer": `*` },
+				type: `module`,
+			}),
+		),
+		...([`browser`, `neutral`, `node`] as const).map((condition) =>
+			fs.writeFile(
+				path.join(directory, `${condition}.js`),
+				[
+					`import { dependency } from "main-only-dependency"`,
+					`import { peer } from "fixture-peer"`,
+					`import { peerSubpath } from "fixture-peer/subpath"`,
+					`import { feature } from "@tonnage-fixture/package/feature"`,
+					`export const value = dependency + peer + peerSubpath + feature + ${JSON.stringify(condition.repeat(100))}`,
+				].join(`\n`),
+			),
+		),
+		fs.writeFile(
+			path.join(directory, `feature.js`),
+			`export const feature = "feature"`,
+		),
+		fs.writeFile(
+			path.join(dependencyDirectory, `package.json`),
+			JSON.stringify({
+				main: `./index.js`,
+				name: `main-only-dependency`,
+				type: `module`,
+			}),
+		),
+		fs.writeFile(
+			path.join(dependencyDirectory, `index.js`),
+			`export const dependency = ${JSON.stringify(`runtime dependency `.repeat(20))}`,
+		),
+		fs.writeFile(
+			path.join(legacyDependencyDirectory, `package.json`),
+			JSON.stringify({
+				browser: `./browser.js`,
+				main: `./node.js`,
+				name: `legacy-field-dependency`,
+				type: `module`,
+			}),
+		),
+		fs.writeFile(
+			path.join(legacyDependencyDirectory, `browser.js`),
+			`export const legacy = ${JSON.stringify(`browser field `.repeat(30))}`,
+		),
+		fs.writeFile(
+			path.join(legacyDependencyDirectory, `node.js`),
+			`export const legacy = ${JSON.stringify(`node main field `.repeat(20))}`,
+		),
+	])
+
+	return { directory }
+}
+
+async function makeMainOnlyFixture(): Promise<{ directory: string }> {
+	const directory = await fs.mkdtemp(
+		path.join(os.tmpdir(), `tonnage-main-only-test-`),
+	)
+	const dependencyDirectory = path.join(
+		directory,
+		`node_modules`,
+		`main-only-dependency`,
+	)
+	await fs.mkdir(dependencyDirectory, { recursive: true })
+	await Promise.all([
+		fs.writeFile(
+			path.join(directory, `package.json`),
+			JSON.stringify({
+				main: `./main.js`,
+				name: `main-only-package`,
+				type: `module`,
+			}),
+		),
+		fs.writeFile(
+			path.join(directory, `main.js`),
+			`export { dependency } from "main-only-dependency"`,
+		),
+		fs.writeFile(
+			path.join(dependencyDirectory, `package.json`),
+			JSON.stringify({
+				main: `./index.js`,
+				name: `main-only-dependency`,
+				type: `module`,
+			}),
+		),
+		fs.writeFile(
+			path.join(dependencyDirectory, `index.js`),
+			`export const dependency = ${JSON.stringify(`main-only runtime dependency `.repeat(20))}`,
+		),
+	])
+
+	return { directory }
+}
+
+async function pathExists(filePath: string): Promise<boolean> {
+	return fs.access(filePath).then(
+		() => true,
+		() => false,
+	)
 }

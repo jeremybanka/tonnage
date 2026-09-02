@@ -1,7 +1,11 @@
 import fs from "node:fs/promises"
 import path from "node:path"
 
-import { measureEntry, measureImports } from "./measure.ts"
+import {
+	measureEntryWithPlugins,
+	measureImportsWithPlugins,
+} from "./measure.ts"
+import { withPackageResolver } from "./package-resolution.ts"
 import type {
 	TonnageConfig,
 	TonnageExports,
@@ -39,29 +43,39 @@ export async function createTonnageReport(
 		config.exports,
 	)
 
-	const exportRows = await Promise.all(
-		exportImports.map(async (specifier): Promise<TonnageRow> => ({
-			...(await measureImports([specifier], {
-				external,
-				platform: config.platform,
-				resolveDirectory,
-				target: config.target,
-			})),
-			imports: [specifier],
-			name: specifier,
-		})),
-	)
-	const recipeRows = await Promise.all(
-		(config.recipes ?? []).map(async (recipe) => ({
-			...(await measureEntry(recipe.entry, {
-				external: unique([...external, ...(recipe.external ?? [])]),
-				platform: recipe.platform ?? config.platform,
-				resolveDirectory,
-				target: config.target,
-			})),
-			entry: recipe.entry,
-			name: recipe.name,
-		})),
+	const { exportRows, recipeRows } = await withPackageResolver(
+		packageJson.name,
+		resolveDirectory,
+		async (packageResolver) => {
+			const exportRows = await Promise.all(
+				exportImports.map(async (specifier): Promise<TonnageRow> => ({
+					...(await measureImportsWithPlugins([specifier], {
+						external,
+						platform: config.platform,
+						plugins: [packageResolver],
+						resolveDirectory,
+						target: config.target,
+					})),
+					imports: [specifier],
+					name: specifier,
+				})),
+			)
+			const recipeRows = await Promise.all(
+				(config.recipes ?? []).map(async (recipe) => ({
+					...(await measureEntryWithPlugins(recipe.entry, {
+						external: unique([...external, ...(recipe.external ?? [])]),
+						platform: recipe.platform ?? config.platform,
+						plugins: [packageResolver],
+						resolveDirectory,
+						target: config.target,
+					})),
+					entry: recipe.entry,
+					name: recipe.name,
+				})),
+			)
+
+			return { exportRows, recipeRows }
+		},
 	)
 
 	return {

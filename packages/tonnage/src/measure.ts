@@ -1,7 +1,7 @@
 import path from "node:path"
 import { gzipSync } from "node:zlib"
 
-import { build, type BuildOptions } from "esbuild"
+import { build, type BuildOptions, type Plugin } from "esbuild"
 
 import type { BundleMeasurement, BundlePlatform } from "./types.ts"
 
@@ -14,9 +14,20 @@ export type MeasureImportsOptions = {
 
 export type MeasureEntryOptions = MeasureImportsOptions
 
+type InternalMeasureOptions = MeasureImportsOptions & {
+	plugins?: readonly Plugin[]
+}
+
 export async function measureEntry(
 	entry: string,
 	options: MeasureEntryOptions,
+): Promise<BundleMeasurement> {
+	return measureEntryWithPlugins(entry, options)
+}
+
+export async function measureEntryWithPlugins(
+	entry: string,
+	options: InternalMeasureOptions,
 ): Promise<BundleMeasurement> {
 	return measureBuild(
 		{ entryPoints: [path.resolve(options.resolveDirectory, entry)] },
@@ -27,6 +38,13 @@ export async function measureEntry(
 export async function measureImports(
 	imports: readonly string[],
 	options: MeasureImportsOptions,
+): Promise<BundleMeasurement> {
+	return measureImportsWithPlugins(imports, options)
+}
+
+export async function measureImportsWithPlugins(
+	imports: readonly string[],
+	options: InternalMeasureOptions,
 ): Promise<BundleMeasurement> {
 	if (imports.length === 0) {
 		throw new Error(`A tonnage entry must import at least one module.`)
@@ -53,7 +71,7 @@ export async function measureImports(
 
 async function measureBuild(
 	entry: Pick<BuildOptions, `entryPoints` | `stdin`>,
-	options: MeasureEntryOptions,
+	options: InternalMeasureOptions,
 ): Promise<BundleMeasurement> {
 	const platform = options.platform ?? `neutral`
 
@@ -67,9 +85,11 @@ async function measureBuild(
 		format: `esm`,
 		legalComments: `none`,
 		logLevel: `silent`,
+		...(platform === `neutral` ? { mainFields: [`module`, `main`] } : {}),
 		minify: true,
 		outdir: `out`,
 		platform,
+		plugins: [...(options.plugins ?? [])],
 		...entry,
 		target: options.target ?? `es2022`,
 		treeShaking: true,
