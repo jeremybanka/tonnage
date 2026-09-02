@@ -41,7 +41,7 @@
 		"test": "vp test"
 	},
 	"dependencies": {
-		"comline": "0.5.2",
+		"comline": "0.5.3",
 		"esbuild": "0.28.2"
 	},
 	"devDependencies": {
