@@ -49,3 +49,21 @@ Every layout states the exact measurement semantics: minified and level-9 gzip
 JavaScript bytes, with declarations, source maps, CSS, and other assets excluded.
 Peer dependencies remain external, and shared modules are counted once in each
 bundle.
+
+## Package resolution and platforms
+
+Tonnage resolves the package's own public import name from the manifest selected
+by `packageJson`; a workspace package does not need to install or declare itself
+as a dependency. Root and subpath imports still go through esbuild's package
+resolver, so the manifest's `exports` restrictions and conditions apply. Runtime
+dependencies resolve from the measured package, while its peer dependencies stay
+external.
+
+The default `platform` is `neutral`. For packages without `exports`, Tonnage
+configures neutral resolution to try the `module` field and then `main`, so
+main-only packages and dependencies are actionable by default. With conditional
+`exports`, neutral does not enable the `browser` or `node` condition, so exports
+commonly fall through to their `default` target. Set `platform` to `browser` or
+`node` when that runtime is what you want to measure; those choices retain
+esbuild's native export conditions and main-field behavior. A recipe's
+`platform` overrides the report-wide setting for that recipe.
