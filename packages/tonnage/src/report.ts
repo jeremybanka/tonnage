@@ -75,17 +75,19 @@ export function renderTonnageMarkdown(
 	report: TonnageReport,
 	config: TonnageConfig = {},
 ): string {
+	const hasExports = report.exports.length > 0
+	const hasRecipes = report.recipes.length > 0
+	const hasMultipleSections = hasExports && hasRecipes
 	const lines = [
 		`## ${config.heading ?? `Bundle size`}`,
 		``,
-		`Public-module rows retain complete runtime export surfaces. Recipe rows bundle their reviewable entry files and tree-shake unused exports. Both report exact minified and level-9 gzip JavaScript byte counts; declarations, source maps, CSS, and other assets are excluded. Peer dependencies stay external, and shared modules are counted once per bundle.`,
+		...methodologyLines({ hasExports, hasRecipes }),
 	]
 
-	if (report.exports.length > 0) {
+	if (hasExports) {
 		lines.push(
 			``,
-			`### Public modules (whole export surface)`,
-			``,
+			...(hasMultipleSections ? [`### Package exports`, ``] : []),
 			...markdownTable(
 				[`Import`, `Minified JS`, `Gzip JS`],
 				report.exports.map((row) => [
@@ -98,11 +100,10 @@ export function renderTonnageMarkdown(
 		)
 	}
 
-	if (report.recipes.length > 0) {
+	if (hasRecipes) {
 		lines.push(
 			``,
-			`### Representative runtimes (tree-shaken)`,
-			``,
+			...(hasMultipleSections ? [`### Usage examples`, ``] : []),
 			...markdownTable(
 				[`Recipe`, `Entry`, `Minified JS`, `Gzip JS`],
 				report.recipes.map((row) => [
@@ -117,6 +118,28 @@ export function renderTonnageMarkdown(
 	}
 
 	return lines.join(`\n`)
+}
+
+function methodologyLines({
+	hasExports,
+	hasRecipes,
+}: {
+	hasExports: boolean
+	hasRecipes: boolean
+}): string[] {
+	const lines: string[] = []
+	if (hasExports) {
+		lines.push(`Package export sizes include complete runtime export surfaces.`)
+	}
+	if (hasRecipes) {
+		lines.push(
+			`Usage example sizes bundle their entry files and tree-shake unused exports.`,
+		)
+	}
+	lines.push(
+		`Sizes are exact minified and level-9 gzip JavaScript byte counts. Declarations, source maps, CSS, and other assets are excluded. Peer dependencies stay external, and shared modules are counted once per bundle.`,
+	)
+	return lines
 }
 
 function selectExportImports(

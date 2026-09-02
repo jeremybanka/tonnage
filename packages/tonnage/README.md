@@ -36,3 +36,16 @@ public export except `./package.json`. Paths are resolved relative to the config
 file. Use `exports.include` or `exports.exclude` to select subpaths, recipe entry
 files to describe realistic runtime boundaries, and `external` for non-peer
 imports that the package intentionally leaves to its consumers.
+
+## Report layout
+
+Generated reports adapt to the measurements they contain. An exports-only or
+recipes-only report puts its table directly below the configured report heading
+and describes only that type of measurement. A report with both types labels the
+tables `Package exports` and `Usage examples` so readers can distinguish complete
+runtime export surfaces from tree-shaken recipe bundles.
+
+Every layout states the exact measurement semantics: minified and level-9 gzip
+JavaScript bytes, with declarations, source maps, CSS, and other assets excluded.
+Peer dependencies remain external, and shared modules are counted once in each
+bundle.
