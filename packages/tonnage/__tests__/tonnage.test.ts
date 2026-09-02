@@ -14,6 +14,75 @@ import {
 } from "../src/index.ts"
 
 describe(`tonnage reports`, () => {
+	test(`renders an exports-only report without recipe details or a subsection`, () => {
+		const markdown = renderTonnageMarkdown({
+			exports: [
+				{
+					gzipBytes: 48,
+					imports: [`fixture-package`],
+					name: `fixture-package`,
+					rawBytes: 120,
+				},
+			],
+			packageName: `fixture-package`,
+			recipes: [],
+		})
+
+		expect(markdown).toContain(`complete runtime export surfaces`)
+		expect(markdown).toContain(`<code>fixture-package</code>`)
+		expect(markdown).not.toContain(`Usage example`)
+		expect(markdown).not.toContain(`Recipe`)
+		expect(markdown).not.toContain(`### `)
+	})
+
+	test(`renders a recipes-only report without export details or a subsection`, () => {
+		const markdown = renderTonnageMarkdown({
+			exports: [],
+			packageName: `fixture-package`,
+			recipes: [
+				{
+					entry: `recipe.js`,
+					gzipBytes: 32,
+					name: `One feature`,
+					rawBytes: 80,
+				},
+			],
+		})
+
+		expect(markdown).toContain(`tree-shake unused exports`)
+		expect(markdown).toContain(`One feature`)
+		expect(markdown).not.toContain(`Package export`)
+		expect(markdown).not.toContain(`Public modules`)
+		expect(markdown).not.toContain(`### `)
+	})
+
+	test(`labels both table types in a combined report`, () => {
+		const markdown = renderTonnageMarkdown({
+			exports: [
+				{
+					gzipBytes: 48,
+					imports: [`fixture-package`],
+					name: `fixture-package`,
+					rawBytes: 120,
+				},
+			],
+			packageName: `fixture-package`,
+			recipes: [
+				{
+					entry: `recipe.js`,
+					gzipBytes: 32,
+					name: `One feature`,
+					rawBytes: 80,
+				},
+			],
+		})
+
+		expect(markdown).toContain(`complete runtime export surfaces`)
+		expect(markdown).toContain(`tree-shake unused exports`)
+		expect(markdown).toContain(`### Package exports`)
+		expect(markdown).toContain(`### Usage examples`)
+	})
+
 	test(`measures the actual bundled output`, async () => {
 		const fixture = await makeFixture()
 		const measurement = await measureImports([fixture.entryPath], {
