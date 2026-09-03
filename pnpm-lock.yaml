@@ -53,8 +53,8 @@ importers:
   packages/tonnage:
     dependencies:
       comline:
-        specifier: 0.5.3
-        version: 0.5.3
+        specifier: 0.5.4
+        version: 0.5.4
       esbuild:
         specifier: 0.28.2
         version: 0.28.2
@@ -1611,8 +1611,8 @@ packages:
     resolution: {integrity: sha512-2uNTXIuTTxk7ciZgAU1BQcgnchcG0xXnrs6jzkQfj9SsRa9M2s5zE8WT96hS6KmG4MzWHSrvH43DF1m4XRkrFg==}
     engines: {node: '>=22'}
 
-  comline@0.5.3:
-    resolution: {integrity: sha512-DUhfpeMZTlOWT9jFn/10x3ToeF0bf3P5TQ6porHcw7NfwsU+jn/699VgEwwuuQFcwY1t2oipTkmav96hfiKySA==}
+  comline@0.5.4:
+    resolution: {integrity: sha512-BPjo0uH1abicDmlIJy2/2PT2yYSRnmRq5v4wtRtnq/UjUZvBB8PZJHECryCmpQQklBDlF2DAy7R+kes4HABGPg==}
     peerDependencies:
       arktype: ^2.1.28
       zod: ^4.2.0
@@ -2018,8 +2018,8 @@ packages:
     resolution: {integrity: sha512-sf4i37nQ2LBx4m3wB74y+ubopq6W/dIzXg0FDGjsYnZHVa1Da8FH853wlL2gtUhg+xJXjfk3kUZS3BRoQeoQBQ==}
     engines: {node: '>=6'}
 
-  treetrunks@0.1.10:
-    resolution: {integrity: sha512-/L7AtQZkPAUvpL11NPo/8n6y5wmF9SSSgrPO8Xb68M23zmw5rKa4JA7OKScbCCoaalEf0Ljml0P5RBQR9HC5Ew==}
+  treetrunks@0.1.11:
+    resolution: {integrity: sha512-3L5O5w3AGZd47pGpTNEQAfp68pSIQCeundsUZnPLPtg4TYL87qmcSJsvoqLeRUXtmL8W7JycaD3gd+i2SCYQrQ==}
 
   typescript@7.0.2:
     resolution: {integrity: sha512-8FYau96o3NKOhbjKi/qNvG/W5jhzxkbdm5sj9AbZ/5T5sWqn3hJgLfGx27sRKZWTvyzCP8dLRBTf5tBTSRVUNA==}
@@ -3215,10 +3215,10 @@ snapshots:
 
   chalk@6.0.0: {}
 
-  comline@0.5.3:
+  comline@0.5.4:
     dependencies:
       '@standard-schema/spec': 1.1.0
-      treetrunks: 0.1.10
+      treetrunks: 0.1.11
 
   commander@15.0.0: {}
 
@@ -3651,7 +3651,7 @@ snapshots:
 
   totalist@3.0.1: {}
 
-  treetrunks@0.1.10: {}
+  treetrunks@0.1.11: {}
 
   typescript@7.0.2:
     optionalDependencies:
