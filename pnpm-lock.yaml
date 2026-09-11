@@ -211,8 +211,8 @@ importers:
   packages/tonnage:
     dependencies:
       comline:
-        specifier: 0.5.4
-        version: 0.5.4
+        specifier: 0.6.0
+        version: 0.6.0
       esbuild:
         specifier: 0.28.2
         version: 0.28.2
@@ -1782,8 +1782,8 @@ packages:
     resolution: {integrity: sha512-2uNTXIuTTxk7ciZgAU1BQcgnchcG0xXnrs6jzkQfj9SsRa9M2s5zE8WT96hS6KmG4MzWHSrvH43DF1m4XRkrFg==}
     engines: {node: '>=22'}
 
-  comline@0.5.4:
-    resolution: {integrity: sha512-BPjo0uH1abicDmlIJy2/2PT2yYSRnmRq5v4wtRtnq/UjUZvBB8PZJHECryCmpQQklBDlF2DAy7R+kes4HABGPg==}
+  comline@0.6.0:
+    resolution: {integrity: sha512-xGnbd0VKp770L6uRq6iS3I4p/Vd+2J+zyQad2ZaDn0HzoVIN+JdYB588W49Dt6lNnPGo5P2HvEJRrne0yHmEzA==}
     peerDependencies:
       arktype: ^2.1.28
       zod: ^4.2.0
@@ -3403,7 +3403,7 @@ snapshots:
 
   chalk@6.0.0: {}
 
-  comline@0.5.4:
+  comline@0.6.0:
     dependencies:
       '@standard-schema/spec': 1.1.0
       treetrunks: 0.1.11
