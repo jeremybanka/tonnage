@@ -1,5 +1,11 @@
 # tonnage
 
+## 0.1.3
+
+### Patch Changes
+
+- 9866ade: Upgrade comline, pass full runtime argv, add command and config-path completion with shell installation commands, and report ignored-option warnings on stderr while preserving asynchronous config loading.
+
 ## 0.1.2
 
 ### Patch Changes
