@@ -1,4 +1,11 @@
-import { cli, help, helpOption, optional } from "comline"
+import {
+	type CliWarning,
+	cli,
+	completionResponse,
+	help,
+	helpOption,
+	optional,
+} from "comline"
 
 import type { TonnageMode } from "./types.ts"
 
@@ -22,18 +29,29 @@ const tonnageCli = cli({
 		write: WRITE_MANUAL,
 		"write/$configPath": WRITE_MANUAL,
 	},
+	positionalCompletions: {
+		"check/$configPath": { fileSystem: `files` },
+		"write/$configPath": { fileSystem: `files` },
+	},
 	discoverConfigPath: () => undefined,
 })
 
-export type TonnageCliInvocation =
+export type TonnageCliInvocation = { warnings: CliWarning[] } & (
 	| { kind: `help` }
 	| { configArgument?: string; kind: `run`; mode: TonnageMode }
+)
+
+export function completeTonnageCli(
+	args: string[],
+): Promise<string | undefined> {
+	return completionResponse(tonnageCli.definition, args)
+}
 
 export function parseTonnageCli(args: string[]): TonnageCliInvocation {
-	const { inputs } = tonnageCli(args)
+	const { inputs, warnings } = tonnageCli(args)
 
 	if (inputs.case === `` || inputs.opts.help) {
-		return { kind: `help` }
+		return { kind: `help`, warnings }
 	}
 
 	const mode =
@@ -43,8 +61,8 @@ export function parseTonnageCli(args: string[]): TonnageCliInvocation {
 	const configArgument = inputs.path[1]
 
 	return configArgument === undefined
-		? { kind: `run`, mode }
-		: { configArgument, kind: `run`, mode }
+		? { kind: `run`, mode, warnings }
+		: { configArgument, kind: `run`, mode, warnings }
 }
 
 export function renderTonnageCliHelp(): string {

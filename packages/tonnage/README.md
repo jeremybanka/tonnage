@@ -31,11 +31,42 @@ Run `tonnage write` during development to update the README. Run
 nonzero when the README is stale. Run `tonnage --help` to see both commands and
 their optional config-path arguments.
 
+Pass a config path with `tonnage check path/to/tonnage.config.ts` or
+`tonnage write path/to/tonnage.config.ts`. Otherwise, Tonnage looks in the current
+directory for `tonnage.config.ts`, then `tonnage.config.mjs`, then
+`tonnage.config.js`. Config modules may use top-level `await`. Missing configs
+are errors. Use `--` before a config path that starts with a dash.
+
+Unknown options are ignored with warnings on stderr. Warnings do not change the
+exit status; `check` still exits nonzero when the report is stale.
+
 By default the tool reads `package.json`, writes `README.md`, and measures every
 public export except `./package.json`. Paths are resolved relative to the config
 file. Use `exports.include` or `exports.exclude` to select subpaths, recipe entry
 files to describe realistic runtime boundaries, and `external` for non-peer
 imports that the package intentionally leaves to its consumers.
+
+### Shell completion
+
+With `tonnage` available on your shell's `PATH`, install completion for your shell:
+
+```sh
+tonnage completion install bash
+tonnage completion install zsh
+tonnage completion install fish
+tonnage completion install nushell
+tonnage completion install carapace
+```
+
+Choose the integration you use. Completion suggests commands, help options, and
+config paths without loading your config or measuring bundles. Installation
+checks the shell's prerequisites and writes to its completion directory without
+editing shell profiles. It reports any setup needed for your shell. If Nushell
+already uses Carapace, install only the Carapace integration.
+
+Run `tonnage completion bash` (or another target above) to print the integration
+file without installing it. The `completion` command and comline's internal
+completion protocol commands are reserved for shell integration.
 
 ## Report layout
 

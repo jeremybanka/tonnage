@@ -4,7 +4,13 @@ import fs from "node:fs/promises"
 import path from "node:path"
 import { pathToFileURL } from "node:url"
 
-import { parseTonnageCli, renderTonnageCliHelp } from "./command-line.ts"
+import { logWarnings } from "comline"
+
+import {
+	completeTonnageCli,
+	parseTonnageCli,
+	renderTonnageCliHelp,
+} from "./command-line.ts"
 import { runTonnage } from "./run.ts"
 import type { TonnageConfig } from "./types.ts"
 
@@ -15,7 +21,14 @@ const DEFAULT_CONFIG_FILES = [
 ]
 
 async function main(): Promise<void> {
-	const invocation = parseTonnageCli([`tonnage`, ...process.argv.slice(2)])
+	const completion = await completeTonnageCli(process.argv)
+	if (completion !== undefined) {
+		process.stdout.write(completion)
+		return
+	}
+
+	const invocation = parseTonnageCli(process.argv)
+	logWarnings(invocation.warnings)
 	if (invocation.kind === `help`) {
 		process.stdout.write(renderTonnageCliHelp())
 		return
