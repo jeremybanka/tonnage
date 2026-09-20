@@ -39,7 +39,7 @@
 		"esbuild": "0.28.2"
 	},
 	"devDependencies": {
-		"@types/node": "26.6.1",
+		"@types/node": "26.6.2",
 		"vitest": "npm:@voidzero-dev/vite-plus-test@0.1.24"
 	},
 	"engines": {
