@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest"
+import { describe, expect, test } from "vite-plus/test"
 
 import { parseTonnageCli, renderTonnageCliHelp } from "../src/command-line.ts"
 

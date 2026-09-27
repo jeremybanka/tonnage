@@ -5,7 +5,7 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { promisify } from "node:util"
 
-import { afterEach, describe, expect, test } from "vitest"
+import { afterEach, describe, expect, test } from "vite-plus/test"
 
 const execute = promisify(execFile)
 const cliPath = fileURLToPath(new URL(`../src/cli.ts`, import.meta.url))
