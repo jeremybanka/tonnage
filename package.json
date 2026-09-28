@@ -10,7 +10,6 @@
 		"check:fmt": "dprint check",
 		"check:vp": "vp check --no-fmt",
 		"check:spelling": "cspell .",
-		"check:tsc": "tsc --noEmit -p packages/tonnage/tsconfig.json",
 		"fmt": "dprint fmt",
 		"release:publish": "pnpm build && changeset publish",
 		"release:version": "changeset version",
