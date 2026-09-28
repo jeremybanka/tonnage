@@ -6,15 +6,17 @@
 	"scripts": {
 		"build": "vp run -r build",
 		"change": "changeset",
-		"check": "vp check --no-fmt && tsc --noEmit -p packages/tonnage/tsconfig.json",
+		"check": "pnpm run \"/^check:.*/\"",
+		"check:fmt": "dprint check",
+		"check:vp": "vp check --no-fmt",
+		"check:spelling": "cspell .",
 		"fmt": "dprint fmt",
-		"fmt:check": "dprint check",
-		"lint": "vp lint",
-		"release": "pnpm build && changeset publish",
-		"spellcheck": "cspell .",
+		"release:publish": "pnpm build && changeset publish",
+		"release:version": "changeset version",
 		"staged": "vp staged",
 		"test": "vp run -r test",
-		"workflows": "./scripts/update-workflows.node.ts"
+		"test:watch": "vp run -r --parallel --no-cache test:watch",
+		"workflows:update": "./scripts/update-workflows.node.ts"
 	},
 	"devDependencies": {
 		"@changesets/cli": "3.0.2",

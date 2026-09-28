@@ -11,3 +11,7 @@ Install dependencies with `pnpm install`, then use `pnpm build`, `pnpm test`, an
 ## License
 
 Tonnage is free and open-source software under the [Mozilla Public License 2.0](LICENSE).
+
+## Repository commands
+
+See [the command guide](docs/commands.md) for formatting, static checks, tests, coverage where available, and release commands.
