@@ -36,7 +36,7 @@
 		"test:watch": "vp test watch"
 	},
 	"dependencies": {
-		"comline": "0.8.1",
+		"comline": "0.9.0",
 		"esbuild": "0.28.2"
 	},
 	"devDependencies": {
