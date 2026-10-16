@@ -10,6 +10,10 @@
 	"author": "Jeremy Banka",
 	"type": "module",
 	"exports": {
+		"./md-x": {
+			"types": "./dist/md-x.d.mts",
+			"import": "./dist/md-x.mjs"
+		},
 		".": {
 			"import": "./dist/index.mjs",
 			"types": "./dist/index.d.mts"
@@ -40,8 +44,11 @@
 		"esbuild": "0.28.2"
 	},
 	"devDependencies": {
-		"@types/node": "26.6.4"
+		"@types/node": "26.6.4",
+		"md-x": "workspace:^"
 	},
+	"peerDependencies": { "md-x": "workspace:^" },
+	"peerDependenciesMeta": { "md-x": { "optional": true } },
 	"engines": {
 		"node": ">=22.18.0"
 	},

@@ -3,6 +3,7 @@ import { defineConfig } from "vite-plus"
 export default defineConfig({
 	pack: [
 		{
+			tsconfig: "tsconfig.build.json",
 			clean: true,
 			deps: {
 				// tsdown <0.23 compatibility: resolve external dependency subpaths.
@@ -16,12 +17,13 @@ export default defineConfig({
 				onlyBundle: [],
 			},
 			dts: {
-				entry: ["src/index.ts"],
+				entry: ["src/index.ts", "src/md-x.ts"],
 				sourcemap: true,
 			},
 			entry: {
 				cli: "src/cli.ts",
 				index: "src/index.ts",
+				"md-x": "src/md-x.ts",
 			},
 			format: "esm",
 			outDir: "dist",

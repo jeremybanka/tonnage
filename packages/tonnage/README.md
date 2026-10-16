@@ -15,10 +15,42 @@ per bundle.
 Add the generated-section comments to the target README, then create a config
 beside the package manifest. The complete configuration exhibit is in
 [examples/tonnage.config.ts](./examples/tonnage.config.ts).
+
+```ts
+import { defineConfig, type TonnageConfig } from "tonnage"
+
+// @exhibit-region start config
+const config: TonnageConfig = defineConfig({
+	exports: {
+		exclude: [`./package.json`],
+	},
+	marker: `my-package`,
+	recipes: [
+		{
+			entry: `examples/recipes/react-app.ts`,
+			name: `React app`,
+			platform: `browser`,
+		},
+	],
+})
+
+export default config
+// @exhibit-region end config
+
+```
+
 Each recipe points to a reviewable entry file such as
 [examples/recipes/react-app.ts](./examples/recipes/react-app.ts). Use named
 imports in these files to represent the runtime surface a real application uses;
 unused package exports are tree-shaken.
+
+```ts
+// @exhibit-region start recipe
+export { atom } from "my-package"
+export { useO } from "my-package/react"
+// @exhibit-region end recipe
+
+```
 
 The default generated-section marker is `default`; the example uses `my-package`.
 The opening and closing comments use the forms
@@ -98,3 +130,31 @@ commonly fall through to their `default` target. Set `platform` to `browser` or
 `node` when that runtime is what you want to measure; those choices retain
 esbuild's native export conditions and main-field behavior. A recipe's
 `platform` overrides the report-wide setting for that recipe.
+
+## MDX documents
+
+Use [md-x](../md-x/README.md) to compose a README from source examples and reports:
+
+```mdx
+import { Tonnage } from "tonnage/md-x"
+import config from "./tonnage.config.ts"
+import Example from "./examples/recipes/react-app.ts" with { type: "code", lang: "ts" }
+
+<Example />
+
+<Tonnage config={config} />
+```
+
+The component resolves paths relative to the containing document. Pass `directory` to measure another package. It produces the report without writing a README or requiring generated-section markers. Install `md-x` alongside tonnage to use this optional integration.
+
+## Bundle size
+
+Package export sizes include complete runtime export surfaces.
+Sizes are exact minified and level-9 gzip JavaScript byte counts. Declarations, source maps, CSS, and other assets are excluded. Peer dependencies stay external, and shared modules are counted once per bundle.
+
+| Import                    | Minified JS |  Gzip JS |
+| ------------------------- | ----------: | -------: |
+| <code>tonnage</code>      |    50,472 B | 18,125 B |
+| <code>tonnage/md-x</code> |    49,347 B | 17,687 B |
+
+Report maintained with [tonnage](https://github.com/jeremybanka/tonnage).

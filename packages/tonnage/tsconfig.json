@@ -5,6 +5,7 @@
 		"allowJs": false,
 		"declaration": true,
 		"paths": {
+			"md-x": ["../md-x/src/index.ts"],
 			"tonnage": ["./src/index.ts"]
 		},
 		"types": ["node"],

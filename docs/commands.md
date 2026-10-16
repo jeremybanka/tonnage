@@ -8,6 +8,7 @@ Following the [mise Node.js cookbook](https://mise.jdx.dev/mise-cookbook/nodejs.
 | ------------------ | ------------------------------------------------------------------------------------------------------------------ |
 | `fmt`              | Apply the repository formatting policy.                                                                            |
 | `check:fmt`        | Validate formatting without rewriting maintained files; language-specific validators are listed below.             |
+| `docs:write`       | Build the packages and regenerate the tonnage README from its MDX source.                                          |
 | `check`            | Run every static check listed below. Generated prerequisites and caches may be written; source fixes are explicit. |
 | `test`             | Run the normal test suite once and return a failing status when tests fail.                                        |
 | `test:watch`       | Watch the available interactive test suites.                                                                       |
@@ -20,6 +21,7 @@ Following the [mise Node.js cookbook](https://mise.jdx.dev/mise-cookbook/nodejs.
 ## Static checks
 
 - `check:fmt`: `dprint check`.
+- `check:docs`: build the packages and run `md-x check` on tonnage's README source.
 - `check:vp`: `vp check --no-fmt`.
 - `check:spelling`: `cspell .`.
 
