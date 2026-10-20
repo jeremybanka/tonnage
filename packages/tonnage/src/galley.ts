@@ -1,6 +1,6 @@
 import path from "node:path"
 
-import { Markdown, type DocumentContext, type Root } from "md-x"
+import { Markdown, type DocumentContext, type Root } from "galley.mdx"
 
 import { createTonnageReport, renderTonnageMarkdown } from "./report.ts"
 import type { TonnageConfig } from "./types.ts"
@@ -11,7 +11,7 @@ export type TonnageProps = {
 	directory?: string
 }
 
-/** Measure bundles and include the report in an md-x document. */
+/** Measure bundles and include the report in a galley.mdx document. */
 export async function Tonnage(
 	{ config = {}, directory }: TonnageProps,
 	context: DocumentContext,

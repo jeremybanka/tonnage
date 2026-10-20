@@ -21,7 +21,7 @@ Following the [mise Node.js cookbook](https://mise.jdx.dev/mise-cookbook/nodejs.
 ## Static checks
 
 - `check:fmt`: `dprint check`.
-- `check:docs`: build the packages and run `md-x check` on tonnage's README source.
+- `check:docs`: build the packages, type-check tonnage's README with the TypeScript 7.1 content mapper, and run `galley check` to verify its generated output.
 - `check:vp`: `vp check --no-fmt`.
 - `check:spelling`: `cspell .`.
 

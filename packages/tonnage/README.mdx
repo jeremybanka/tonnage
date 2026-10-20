@@ -1,4 +1,4 @@
-import { Tonnage } from "tonnage/md-x"
+import { Tonnage } from "tonnage/galley"
 import Configuration from "./examples/tonnage.config.ts" with { type: "code", lang: "ts" }
 import Recipe from "./examples/recipes/react-app.ts" with { type: "code", lang: "ts" }
 
@@ -109,10 +109,10 @@ esbuild's native export conditions and main-field behavior. A recipe's
 
 ## MDX documents
 
-Use [md-x](../md-x/README.md) to compose a README from source examples and reports:
+Use [galley.mdx](../galley/README.md) to compose a README from source examples and reports:
 
 ```mdx
-import { Tonnage } from "tonnage/md-x"
+import { Tonnage } from "tonnage/galley"
 import config from "./tonnage.config.ts"
 import Example from "./examples/recipes/react-app.ts" with { type: "code", lang: "ts" }
 
@@ -121,6 +121,6 @@ import Example from "./examples/recipes/react-app.ts" with { type: "code", lang:
 <Tonnage config={config} />
 ```
 
-The component resolves paths relative to the containing document. Pass `directory` to measure another package. It produces the report without writing a README or requiring generated-section markers. Install `md-x` alongside tonnage to use this optional integration.
+The component resolves paths relative to the containing document. Pass `directory` to measure another package. It produces the report without writing a README or requiring generated-section markers. Install `galley.mdx` alongside tonnage to use this optional integration.
 
-<Tonnage config={{ platform: "node", exports: { include: [".", "./md-x"] } }} />
+<Tonnage config={{ platform: "node", exports: { include: [".", "./galley"] } }} />

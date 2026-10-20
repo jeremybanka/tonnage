@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url"
 
 import { afterEach, expect, test } from "vite-plus/test"
 
-import { compileMarkdown } from "../../md-x/src/index.ts"
+import { compileMarkdown } from "../../galley/src/index.ts"
 
 const directories: string[] = []
 afterEach(async () => {
@@ -17,9 +17,9 @@ afterEach(async () => {
 })
 
 test("a tonnage component measures real imports beside an embedded source example", async () => {
-	const directory = await fs.mkdtemp(path.join(os.tmpdir(), "tonnage-md-x-"))
+	const directory = await fs.mkdtemp(path.join(os.tmpdir(), "tonnage-galley-"))
 	directories.push(directory)
-	const component = fileURLToPath(new URL("../src/md-x.ts", import.meta.url))
+	const component = fileURLToPath(new URL("../src/galley.ts", import.meta.url))
 	await fs.writeFile(
 		path.join(directory, "package.json"),
 		JSON.stringify({

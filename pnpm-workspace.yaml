@@ -2,6 +2,7 @@ packages:
   - packages/*
 
 allowBuilds:
+  "@vscode/vsce-sign": false
   dprint: true
   esbuild: true
 

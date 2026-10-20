@@ -10,9 +10,9 @@
 	"author": "Jeremy Banka",
 	"type": "module",
 	"exports": {
-		"./md-x": {
-			"types": "./dist/md-x.d.mts",
-			"import": "./dist/md-x.mjs"
+		"./galley": {
+			"types": "./dist/galley.d.mts",
+			"import": "./dist/galley.mjs"
 		},
 		".": {
 			"import": "./dist/index.mjs",
@@ -45,10 +45,10 @@
 	},
 	"devDependencies": {
 		"@types/node": "26.6.4",
-		"md-x": "workspace:^"
+		"galley.mdx": "workspace:^"
 	},
-	"peerDependencies": { "md-x": "workspace:^" },
-	"peerDependenciesMeta": { "md-x": { "optional": true } },
+	"peerDependencies": { "galley.mdx": "workspace:^" },
+	"peerDependenciesMeta": { "galley.mdx": { "optional": true } },
 	"engines": {
 		"node": ">=22.18.0"
 	},

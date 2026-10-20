@@ -133,10 +133,10 @@ esbuild's native export conditions and main-field behavior. A recipe's
 
 ## MDX documents
 
-Use [md-x](../md-x/README.md) to compose a README from source examples and reports:
+Use [galley.mdx](../galley/README.md) to compose a README from source examples and reports:
 
 ```mdx
-import { Tonnage } from "tonnage/md-x"
+import { Tonnage } from "tonnage/galley"
 import config from "./tonnage.config.ts"
 import Example from "./examples/recipes/react-app.ts" with { type: "code", lang: "ts" }
 
@@ -145,16 +145,16 @@ import Example from "./examples/recipes/react-app.ts" with { type: "code", lang:
 <Tonnage config={config} />
 ```
 
-The component resolves paths relative to the containing document. Pass `directory` to measure another package. It produces the report without writing a README or requiring generated-section markers. Install `md-x` alongside tonnage to use this optional integration.
+The component resolves paths relative to the containing document. Pass `directory` to measure another package. It produces the report without writing a README or requiring generated-section markers. Install `galley.mdx` alongside tonnage to use this optional integration.
 
 ## Bundle size
 
 Package export sizes include complete runtime export surfaces.
 Sizes are exact minified and level-9 gzip JavaScript byte counts. Declarations, source maps, CSS, and other assets are excluded. Peer dependencies stay external, and shared modules are counted once per bundle.
 
-| Import                    | Minified JS |  Gzip JS |
-| ------------------------- | ----------: | -------: |
-| <code>tonnage</code>      |    50,472 B | 18,125 B |
-| <code>tonnage/md-x</code> |    49,347 B | 17,687 B |
+| Import                      | Minified JS |  Gzip JS |
+| --------------------------- | ----------: | -------: |
+| <code>tonnage</code>        |    50,472 B | 18,125 B |
+| <code>tonnage/galley</code> |    49,353 B | 17,691 B |
 
 Report maintained with [tonnage](https://github.com/jeremybanka/tonnage).

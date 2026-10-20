@@ -5,7 +5,7 @@
 - Do not put line breaks in the bodies of changeset files; keep each changeset body on a single line.
 - Before 1.0.0, use patch releases for features and bug fixes, and minor releases for breaking changes.
 - Treat `packages/tonnage/README.md` as the canonical user guide and keep its examples synchronized with the public API.
-- Edit `packages/tonnage/README.mdx` to change that guide, then run `pnpm docs:write`. The generated `README.md` is formatted by md-x and excluded from dprint. Keep md-x consumer guidance in `packages/md-x/AGENTS.md` and its user guide in `packages/md-x/README.md`.
+- Edit `packages/tonnage/README.mdx` to change that guide, then run `pnpm docs:write`. The generated `README.md` is formatted by galley.mdx and excluded from dprint. Keep galley.mdx consumer guidance in `packages/galley/AGENTS.md` and its user guide in `packages/galley/README.md`.
 
 ## Vite Plus Upgrades
 
