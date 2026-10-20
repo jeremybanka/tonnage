@@ -229,9 +229,9 @@ importers:
       '@types/node':
         specifier: 26.6.4
         version: 26.6.4
-      galley.mdx:
-        specifier: file:../../vendor/galley.mdx-0.1.0.tgz
-        version: file:vendor/galley.mdx-0.1.0.tgz
+      galley.md:
+        specifier: file:../../vendor/galley.md-0.1.0.tgz
+        version: file:vendor/galley.md-0.1.0.tgz
       typescript:
         specifier: 7.1.0-dev.20261014.1
         version: 7.1.0-dev.20261014.1
@@ -2232,8 +2232,8 @@ packages:
   function-bind@1.1.2:
     resolution: {integrity: sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==}
 
-  galley.mdx@file:vendor/galley.mdx-0.1.0.tgz:
-    resolution: {integrity: sha512-uc0fdq16cocCqJV9rUjuxFC3RNrezUOZf2GTo5av6RNvEsUg5suP2wclV9Cyqm/ds7CbH3BQPb9vmqb6FFVXsg==, tarball: file:vendor/galley.mdx-0.1.0.tgz}
+  galley.md@file:vendor/galley.md-0.1.0.tgz:
+    resolution: {integrity: sha512-DnjTHXkChMKqr1leI83ZOI1N4TzO5XkU1FzH5eEBdIGgfGc6I7mDVEbJc+Igh1YXFzY462IjSU0iUb6jHIbGpQ==, tarball: file:vendor/galley.md-0.1.0.tgz}
     version: 0.1.0
     engines: {node: '>=22.18.0', pnpm: 12.10.1}
     hasBin: true
@@ -4793,7 +4793,7 @@ snapshots:
 
   function-bind@1.1.2: {}
 
-  galley.mdx@file:vendor/galley.mdx-0.1.0.tgz:
+  galley.md@file:vendor/galley.md-0.1.0.tgz:
     dependencies:
       '@mdx-js/mdx': 3.1.1
       '@types/mdast': 4.0.4

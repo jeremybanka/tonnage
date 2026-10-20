@@ -133,7 +133,7 @@ esbuild's native export conditions and main-field behavior. A recipe's
 
 ## MDX documents
 
-Use [galley.mdx](https://www.npmjs.com/package/galley.mdx) to compose a README from source examples and reports:
+Use [galley.md](https://www.npmjs.com/package/galley.md) to compose a README from source examples and reports:
 
 ```mdx
 import { Tonnage } from "tonnage/galley"
@@ -145,7 +145,7 @@ import Example from "./examples/recipes/react-app.ts" with { type: "code", lang:
 <Tonnage config={config} />
 ```
 
-The component resolves paths relative to the containing document. Pass `directory` to measure another package. It produces the report without writing a README or requiring generated-section markers. Install `galley.mdx` alongside tonnage to use this optional integration.
+The component resolves paths relative to the containing document. Pass `directory` to measure another package. It produces the report without writing a README or requiring generated-section markers. Install `galley.md` alongside tonnage to use this optional integration.
 
 ## Bundle size
 
@@ -155,6 +155,6 @@ Sizes are exact minified and level-9 gzip JavaScript byte counts. Declarations, 
 | Import                      | Minified JS |  Gzip JS |
 | --------------------------- | ----------: | -------: |
 | <code>tonnage</code>        |    50,472 B | 18,125 B |
-| <code>tonnage/galley</code> |    49,353 B | 17,691 B |
+| <code>tonnage/galley</code> |    49,352 B | 17,690 B |
 
 Report maintained with [tonnage](https://github.com/jeremybanka/tonnage).

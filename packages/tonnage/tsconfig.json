@@ -9,7 +9,7 @@
 	],
 	"contentMappers": [
 		{
-			"package": "galley.mdx",
+			"package": "galley.md",
 			"extensions": [
 				".mdx"
 			]
@@ -19,7 +19,7 @@
 		"allowJs": true,
 		"checkJs": true,
 		"jsx": "react-jsx",
-		"jsxImportSource": "galley.mdx",
+		"jsxImportSource": "galley.md",
 		"declaration": true,
 		"paths": {
 			"tonnage": [

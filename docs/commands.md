@@ -33,6 +33,6 @@ Use `check:fmt` for formatting validation and `check:<tool>` for static checks. 
 
 ## Galley dependency before publication
 
-Galley is maintained separately in `../galley.mdx`. Until its first npm release, tonnage installs the packaged snapshot in `vendor/galley.mdx-0.1.0.tgz`. The optional public peer remains `galley.mdx@^0.1.0`. Builds and tests consume the installed package without importing a sibling repository's source.
+Galley is maintained separately in `../galley.md`. Until its first npm release, tonnage installs the packaged snapshot in `vendor/galley.md-0.1.0.tgz`. The optional public peer remains `galley.md@^0.1.0`. Builds and tests consume the installed package without importing a sibling repository's source.
 
-To refresh the snapshot after committing Galley changes, run `pnpm --dir ../galley.mdx pack --pack-destination ../tonnage/vendor` from this repository, then `pnpm install`, `pnpm docs:write`, `pnpm check`, and `pnpm test`. Update `vendor/README.md` with the source commit. After publication, replace the tarball dev dependency with the released version, refresh the lockfile, and remove the snapshot.
+To refresh the snapshot after committing Galley changes, run `pnpm --dir ../galley.md pack --pack-destination ../tonnage/vendor` from this repository, then `pnpm install`, `pnpm docs:write`, `pnpm check`, and `pnpm test`. Update `vendor/README.md` with the source commit. After publication, replace the tarball dev dependency with the released version, refresh the lockfile, and remove the snapshot.

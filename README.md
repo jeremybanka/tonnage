@@ -4,7 +4,7 @@ Workspace for the Tonnage bundle measurement package.
 
 The package itself lives in [packages/tonnage](packages/tonnage).
 
-[galley.mdx](https://www.npmjs.com/package/galley.mdx) compiles MDX components and attributed source imports to plain Markdown. Tonnage's own README is generated from `packages/tonnage/README.mdx`, including source examples and a live bundle report.
+[galley.md](https://www.npmjs.com/package/galley.md) compiles MDX components and attributed source imports to plain Markdown. Tonnage's own README is generated from `packages/tonnage/README.mdx`, including source examples and a live bundle report.
 
 ## Development
 

@@ -45,14 +45,14 @@
 	},
 	"devDependencies": {
 		"@types/node": "26.6.4",
-		"galley.mdx": "file:../../vendor/galley.mdx-0.1.0.tgz",
+		"galley.md": "file:../../vendor/galley.md-0.1.0.tgz",
 		"typescript": "7.1.0-dev.20261014.1"
 	},
 	"peerDependencies": {
-		"galley.mdx": "^0.1.0"
+		"galley.md": "^0.1.0"
 	},
 	"peerDependenciesMeta": {
-		"galley.mdx": {
+		"galley.md": {
 			"optional": true
 		}
 	},
