@@ -1,7 +1,20 @@
 {
 	"extends": "../../tsconfig.json",
-	"include": ["src", "__tests__", "examples", "*.config.ts", "README.mdx"],
-	"contentMappers": [{ "package": "galley.mdx", "extensions": [".mdx"] }],
+	"include": [
+		"src",
+		"__tests__",
+		"examples",
+		"*.config.ts",
+		"README.mdx"
+	],
+	"contentMappers": [
+		{
+			"package": "galley.mdx",
+			"extensions": [
+				".mdx"
+			]
+		}
+	],
 	"compilerOptions": {
 		"allowJs": true,
 		"checkJs": true,
@@ -9,10 +22,13 @@
 		"jsxImportSource": "galley.mdx",
 		"declaration": true,
 		"paths": {
-			"galley.mdx": ["../galley/src/index.ts"],
-			"tonnage": ["./src/index.ts"]
+			"tonnage": [
+				"./src/index.ts"
+			]
 		},
-		"types": ["node"],
+		"types": [
+			"node"
+		],
 		"target": "ES2022"
 	}
 }

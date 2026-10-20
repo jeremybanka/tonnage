@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url"
 
 import { afterEach, expect, test } from "vite-plus/test"
 
-import { compileMarkdown } from "../../galley/src/index.ts"
+import { compileMarkdown } from "galley.mdx"
 
 const directories: string[] = []
 afterEach(async () => {

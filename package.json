@@ -7,7 +7,7 @@
 		"build": "vp run -r build",
 		"change": "changeset",
 		"check": "pnpm run \"/^check:.*/\"",
-		"check:docs": "pnpm build && pnpm --filter galley.mdx exec tsc --runExternalCode --project ../tonnage/tsconfig.json && pnpm --filter tonnage exec galley check",
+		"check:docs": "pnpm build && pnpm --filter tonnage exec tsc --runExternalCode --project tsconfig.json && pnpm --filter tonnage exec galley check",
 		"check:fmt": "dprint check",
 		"check:vp": "vp check --no-fmt",
 		"check:spelling": "cspell .",
