@@ -46,7 +46,7 @@
 	},
 	"devDependencies": {
 		"@types/node": "26.6.5",
-		"typescript": "7.1.0-dev.20261014.1"
+		"typescript": "7.1.0-dev.20261020.3"
 	},
 	"engines": {
 		"node": ">=22.18.0"
