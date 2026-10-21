@@ -2233,7 +2233,7 @@ packages:
     resolution: {integrity: sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==}
 
   galley.md@file:vendor/galley.md-0.0.0.tgz:
-    resolution: {integrity: sha512-ehdZ9dyfoKM60fog9mnDLtqbYxoqJGjW7gj21cQQ6qasM1VwGaonjuWFxe99ZohguFrUiRRv25yrp1q426grqg==, tarball: file:vendor/galley.md-0.0.0.tgz}
+    resolution: {integrity: sha512-rafOmQe9gV0Z/MUfCD4gTEc6TpL+3HhY9etuEh7kjDFEkdyZhfqrSXUWw73xyIOVlQefX/OIKZkLmFaAE26UjQ==, tarball: file:vendor/galley.md-0.0.0.tgz}
     version: 0.0.0
     engines: {node: '>=22.18.0', pnpm: 12.10.1}
     hasBin: true
