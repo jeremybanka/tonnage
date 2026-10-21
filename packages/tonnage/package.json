@@ -44,7 +44,7 @@
 		"esbuild": "0.28.2"
 	},
 	"devDependencies": {
-		"@types/node": "26.6.4",
+		"@types/node": "26.6.5",
 		"galley.md": "file:../../vendor/galley.md-0.0.0.tgz",
 		"typescript": "7.1.0-dev.20261014.1"
 	},
