@@ -8,6 +8,7 @@ Following the [mise Node.js cookbook](https://mise.jdx.dev/mise-cookbook/nodejs.
 | ------------------ | ------------------------------------------------------------------------------------------------------------------ |
 | `fmt`              | Apply the repository formatting policy.                                                                            |
 | `check:fmt`        | Validate formatting without rewriting maintained files; language-specific validators are listed below.             |
+| `docs:write`       | Build the packages and regenerate the tonnage README from its MDX source.                                          |
 | `check`            | Run every static check listed below. Generated prerequisites and caches may be written; source fixes are explicit. |
 | `test`             | Run the normal test suite once and return a failing status when tests fail.                                        |
 | `test:watch`       | Watch the available interactive test suites.                                                                       |
@@ -20,6 +21,7 @@ Following the [mise Node.js cookbook](https://mise.jdx.dev/mise-cookbook/nodejs.
 ## Static checks
 
 - `check:fmt`: `dprint check`.
+- `check:docs`: build the packages, type-check tonnage's README with the TypeScript 7.1 content mapper, and run `galley check` to verify its generated output.
 - `check:vp`: `vp check --no-fmt`.
 - `check:spelling`: `cspell .`.
 
@@ -28,3 +30,7 @@ Following the [mise Node.js cookbook](https://mise.jdx.dev/mise-cookbook/nodejs.
 ## Migration
 
 Use `check:fmt` for formatting validation and `check:<tool>` for static checks. Use the canonical commands directly; superseded names have been removed.
+
+## Galley dependency
+
+Tonnage uses the published `galley.md` package for report rendering and README compilation. It is maintained in [jeremybanka/galley](https://github.com/jeremybanka/galley). First-party `galley.md` releases are excluded from pnpm's minimum release age.

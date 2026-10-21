@@ -1,11 +1,14 @@
 import fs from "node:fs/promises"
 import path from "node:path"
 
+import { renderMarkdown } from "galley.md"
+
 import {
 	measureEntryWithPlugins,
 	measureImportsWithPlugins,
 } from "./measure.ts"
 import { withPackageResolver } from "./package-resolution.ts"
+import { reportContent } from "./report-content.ts"
 import type {
 	TonnageConfig,
 	TonnageExports,
@@ -85,80 +88,16 @@ export async function createTonnageReport(
 	}
 }
 
-export function renderTonnageMarkdown(
+/** Serialize a report with the same Galley elements used by the document component. */
+export async function renderTonnageMarkdown(
 	report: TonnageReport,
 	config: TonnageConfig = {},
-): string {
-	const hasExports = report.exports.length > 0
-	const hasRecipes = report.recipes.length > 0
-	const hasMultipleSections = hasExports && hasRecipes
-	const lines = [
-		`## ${config.heading ?? `Bundle size`}`,
-		``,
-		...methodologyLines({ hasExports, hasRecipes }),
-	]
-
-	if (hasExports) {
-		lines.push(
-			``,
-			...(hasMultipleSections ? [`### Package exports`, ``] : []),
-			...markdownTable(
-				[`Import`, `Minified JS`, `Gzip JS`],
-				report.exports.map((row) => [
-					code(row.name),
-					formatBytes(row.rawBytes),
-					formatBytes(row.gzipBytes),
-				]),
-				[`left`, `right`, `right`],
-			),
-		)
-	}
-
-	if (hasRecipes) {
-		lines.push(
-			``,
-			...(hasMultipleSections ? [`### Usage examples`, ``] : []),
-			...markdownTable(
-				[`Recipe`, `Entry`, `Minified JS`, `Gzip JS`],
-				report.recipes.map((row) => [
-					escapeCell(row.name),
-					code(row.entry),
-					formatBytes(row.rawBytes),
-					formatBytes(row.gzipBytes),
-				]),
-				[`left`, `left`, `right`, `right`],
-			),
-		)
-	}
-
-	lines.push(
-		``,
-		`Report maintained with [tonnage](https://github.com/jeremybanka/tonnage).`,
-	)
-
-	return lines.join(`\n`)
-}
-
-function methodologyLines({
-	hasExports,
-	hasRecipes,
-}: {
-	hasExports: boolean
-	hasRecipes: boolean
-}): string[] {
-	const lines: string[] = []
-	if (hasExports) {
-		lines.push(`Package export sizes include complete runtime export surfaces.`)
-	}
-	if (hasRecipes) {
-		lines.push(
-			`Usage example sizes bundle their entry files and tree-shake unused exports.`,
-		)
-	}
-	lines.push(
-		`Sizes are exact minified and level-9 gzip JavaScript byte counts. Declarations, source maps, CSS, and other assets are excluded. Peer dependencies stay external, and shared modules are counted once per bundle.`,
-	)
-	return lines
+): Promise<string> {
+	const directory = process.cwd()
+	return renderMarkdown(reportContent(report, config), {
+		directory,
+		path: path.resolve(directory, config.readme ?? "README.md"),
+	})
 }
 
 function selectExportImports(
@@ -204,45 +143,6 @@ function toPackageImport(packageName: string, exportKey: string): string {
 	return `${packageName}/${exportKey.slice(2)}`
 }
 
-function formatBytes(bytes: number): string {
-	return `${new Intl.NumberFormat(`en-US`).format(bytes)} B`
-}
-
-function code(value: string): string {
-	return `<code>${escapeCell(value)}</code>`
-}
-
-function escapeCell(value: string): string {
-	return value.replaceAll(`&`, `&amp;`).replaceAll(`|`, `&#124;`)
-}
-
 function unique(values: readonly string[]): string[] {
 	return [...new Set(values)]
-}
-
-function markdownTable(
-	headings: readonly string[],
-	rows: readonly (readonly string[])[],
-	alignments: readonly (`left` | `right`)[],
-): string[] {
-	const widths = headings.map((heading, column) =>
-		Math.max(heading.length, ...rows.map((row) => row[column]?.length ?? 0), 3),
-	)
-	const renderRow = (cells: readonly string[]): string =>
-		`| ${cells.map((cell, column) => padCell(cell, widths[column] ?? 3, alignments[column] ?? `left`)).join(` | `)} |`
-	const separator = widths.map((width, column) =>
-		alignments[column] === `right`
-			? `${`-`.repeat(width - 1)}:`
-			: `-`.repeat(width),
-	)
-
-	return [renderRow(headings), renderRow(separator), ...rows.map(renderRow)]
-}
-
-function padCell(
-	cell: string,
-	width: number,
-	alignment: `left` | `right`,
-): string {
-	return alignment === `right` ? cell.padStart(width) : cell.padEnd(width)
 }
