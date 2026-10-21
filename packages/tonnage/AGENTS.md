@@ -8,3 +8,5 @@ CI-first runtime JavaScript bundle measurement with checked-in README reports.
 - Peer dependencies stay external by default. Use explicit `external` entries only for additional dependencies intentionally supplied by consumers.
 - Run `tonnage write` to update a generated README section and `tonnage check` in CI to detect drift.
 - Keep marker names stable and use the `tonnage:<name>:start` and `tonnage:<name>:end` comment forms.
+- For a galley.md document, import `Tonnage` from `tonnage/galley`. Its config paths default to the containing document's directory. The component measures and renders a report without writing a README or requiring section markers.
+- Await `renderTonnageMarkdown(report, config)` when using the programmatic API. CLI reports and document components share Galley's table rendering, escaping literal text and aligning byte columns to the right.

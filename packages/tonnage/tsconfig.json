@@ -1,13 +1,34 @@
 {
 	"extends": "../../tsconfig.json",
-	"include": ["src", "__tests__", "examples", "*.config.ts"],
+	"include": [
+		"src",
+		"__tests__",
+		"examples",
+		"*.config.ts",
+		"README.mdx"
+	],
+	"contentMappers": [
+		{
+			"package": "galley.md",
+			"extensions": [
+				".mdx"
+			]
+		}
+	],
 	"compilerOptions": {
-		"allowJs": false,
+		"allowJs": true,
+		"checkJs": true,
+		"jsx": "react-jsx",
+		"jsxImportSource": "galley.md",
 		"declaration": true,
 		"paths": {
-			"tonnage": ["./src/index.ts"]
+			"tonnage": [
+				"./src/index.ts"
+			]
 		},
-		"types": ["node"],
+		"types": [
+			"node"
+		],
 		"target": "ES2022"
 	}
 }

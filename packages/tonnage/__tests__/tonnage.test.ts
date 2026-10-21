@@ -4,6 +4,8 @@ import path from "node:path"
 
 import { describe, expect, test } from "vite-plus/test"
 
+import { Markdown } from "galley.md"
+
 import {
 	createTonnageReport,
 	measureImports,
@@ -14,8 +16,8 @@ import {
 } from "../src/index.ts"
 
 describe(`tonnage reports`, () => {
-	test(`renders an exports-only report without recipe details or a subsection`, () => {
-		const markdown = renderTonnageMarkdown({
+	test(`renders an exports-only report without recipe details or a subsection`, async () => {
+		const markdown = await renderTonnageMarkdown({
 			exports: [
 				{
 					gzipBytes: 48,
@@ -29,14 +31,14 @@ describe(`tonnage reports`, () => {
 		})
 
 		expect(markdown).toContain(`complete runtime export surfaces`)
-		expect(markdown).toContain(`<code>fixture-package</code>`)
+		expect(markdown).toContain("`fixture-package`")
 		expect(markdown).not.toContain(`Usage example`)
 		expect(markdown).not.toContain(`Recipe`)
 		expect(markdown).not.toContain(`### `)
 	})
 
-	test(`renders a recipes-only report without export details or a subsection`, () => {
-		const markdown = renderTonnageMarkdown({
+	test(`renders a recipes-only report without export details or a subsection`, async () => {
+		const markdown = await renderTonnageMarkdown({
 			exports: [],
 			packageName: `fixture-package`,
 			recipes: [
@@ -56,8 +58,8 @@ describe(`tonnage reports`, () => {
 		expect(markdown).not.toContain(`### `)
 	})
 
-	test(`labels both table types in a combined report`, () => {
-		const markdown = renderTonnageMarkdown({
+	test(`labels both table types in a combined report`, async () => {
+		const markdown = await renderTonnageMarkdown({
 			exports: [
 				{
 					gzipBytes: 48,
@@ -81,6 +83,71 @@ describe(`tonnage reports`, () => {
 		expect(markdown).toContain(`tree-shake unused exports`)
 		expect(markdown).toContain(`### Package exports`)
 		expect(markdown).toContain(`### Usage examples`)
+	})
+
+	test("preserves literal table text and code while aligning byte columns", async () => {
+		const importName = "@fixture/a|b`<c>&"
+		const entry = "./examples/a|b`<c>&.ts"
+		const markdown = await renderTonnageMarkdown({
+			packageName: importName,
+			exports: [
+				{
+					name: importName,
+					imports: [importName],
+					rawBytes: 1234,
+					gzipBytes: 567,
+				},
+			],
+			recipes: [
+				{
+					name: "*Literal* | <recipe> & [label]\nnext line",
+					entry,
+					rawBytes: 2345,
+					gzipBytes: 678,
+				},
+			],
+		})
+		const tables = Markdown({ children: markdown }).children.filter(
+			(node) => node.type === "table",
+		)
+		expect(tables).toHaveLength(2)
+		expect(tables[0]?.align).toEqual([null, "right", "right"])
+		expect(tables[1]?.align).toEqual([null, null, "right", "right"])
+		expect(
+			tables[0]?.children[1]?.children.map((cell) => cell.children),
+		).toEqual([
+			[{ type: "inlineCode", value: importName, position: expect.any(Object) }],
+			[{ type: "text", value: "1,234 B", position: expect.any(Object) }],
+			[{ type: "text", value: "567 B", position: expect.any(Object) }],
+		])
+		expect(tables[1]?.children[1]?.children[0]?.children).toEqual([
+			{
+				type: "text",
+				value: "*Literal* | <recipe> & [label] next line",
+				position: expect.any(Object),
+			},
+		])
+		expect(tables[1]?.children[1]?.children[1]?.children).toEqual([
+			{ type: "inlineCode", value: entry, position: expect.any(Object) },
+		])
+	})
+
+	test("renders an empty report without tables or measurement-specific prose", async () => {
+		const markdown = await renderTonnageMarkdown(
+			{ packageName: "fixture", exports: [], recipes: [] },
+			{ heading: "Size [budget]" },
+		)
+		const document = Markdown({ children: markdown })
+		expect(document.children[0]).toMatchObject({
+			type: "heading",
+			depth: 2,
+			children: [{ type: "text", value: "Size [budget]" }],
+		})
+		expect(document.children.some((node) => node.type === "table")).toBe(false)
+		expect(markdown).toContain("level-9 gzip")
+		expect(markdown).toContain("Report maintained with")
+		expect(markdown).not.toContain("Package export sizes")
+		expect(markdown).not.toContain("Usage example sizes")
 	})
 
 	test(`measures the actual bundled output`, async () => {
@@ -143,7 +210,7 @@ describe(`tonnage reports`, () => {
 			(report.exports[0]?.rawBytes ?? 0) + (report.exports[1]?.rawBytes ?? 0),
 		)
 		expect(report.recipes[0]?.entry).toBe(`recipe.js`)
-		const markdown = renderTonnageMarkdown(report)
+		const markdown = await renderTonnageMarkdown(report)
 		expect(markdown).toContain(`shared modules`)
 		expect(markdown).toContain(
 			`Report maintained with [tonnage](https://github.com/jeremybanka/tonnage).`,

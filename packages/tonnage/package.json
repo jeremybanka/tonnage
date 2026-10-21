@@ -10,6 +10,10 @@
 	"author": "Jeremy Banka",
 	"type": "module",
 	"exports": {
+		"./galley": {
+			"types": "./dist/galley.d.mts",
+			"import": "./dist/galley.mjs"
+		},
 		".": {
 			"import": "./dist/index.mjs",
 			"types": "./dist/index.d.mts"
@@ -37,10 +41,12 @@
 	},
 	"dependencies": {
 		"comline": "0.9.0",
-		"esbuild": "0.28.2"
+		"esbuild": "0.28.2",
+		"galley.md": "0.1.1"
 	},
 	"devDependencies": {
-		"@types/node": "26.6.5"
+		"@types/node": "26.6.5",
+		"typescript": "7.1.0-dev.20261014.1"
 	},
 	"engines": {
 		"node": ">=22.18.0"

@@ -16,7 +16,7 @@ export async function runTonnage(
 	const readmePath = path.resolve(configDirectory, config.readme ?? `README.md`)
 	const oldReadme = await fs.readFile(readmePath, `utf8`)
 	const report = await createTonnageReport(config, configDirectory)
-	const markdown = renderTonnageMarkdown(report, config)
+	const markdown = await renderTonnageMarkdown(report, config)
 	const newReadme = updateGeneratedSection(oldReadme, markdown, config.marker)
 	const changed = oldReadme !== newReadme
 
