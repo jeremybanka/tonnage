@@ -42,4 +42,6 @@ Tonnage requires `galley.md` as a peer for report rendering and pins it as a dev
 
 Breakage compares peer requirements with the latest `tonnage@` release tag. The peer CI job fetches release history. Changesets supplies the planned version; a minor release before 1.0 or a major release certifies intentional support changes. Consumer assertion failures cannot be certified away. The package-level `pack:breakage` command creates the archive; the root peer command builds before packing.
 
+The consumer fixture uses `tsconfig.consumer.json` explicitly inside Breakage so its type check resolves the installed package. Keeping that config separate from automatic `tsconfig.json` discovery lets `check:vp` validate workspace source before a build.
+
 Breakage removes its disposable `test/` directory after each run. Do not run checks against the same representative concurrently; inspect any stage left by an interrupted process before removing it.

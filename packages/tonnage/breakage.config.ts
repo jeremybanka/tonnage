@@ -12,7 +12,7 @@ export default {
 			"galley.md": {
 				files: ["__tests__/fixtures/consumer/*"],
 				command:
-					"node --test __tests__/fixtures/consumer/runtime.ts && node ../node_modules/typescript/bin/tsc -p __tests__/fixtures/consumer/tsconfig.json",
+					"node --test __tests__/fixtures/consumer/runtime.ts && node ../node_modules/typescript/bin/tsc -p __tests__/fixtures/consumer/tsconfig.consumer.json",
 			},
 		},
 		baseline: { tagPattern: "refs/tags/tonnage@" },
