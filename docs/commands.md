@@ -38,7 +38,7 @@ Tonnage requires `galley.md` as a peer for report rendering and pins it as a dev
 
 ## Peer compatibility
 
-`test:breakage:peers` runs without task caching and exercises the packed package against every representative under `packages/tonnage/peer-environments`. Each environment has a separate workspace and committed lockfile with automatic peer installation disabled. The consumer suite checks programmatic rendering, MDX composition, CLI write/check, and public declaration compatibility.
+`test:breakage:peers` runs without task caching and exercises the packed package against every representative under `packages/tonnage/peer-environments`. Each environment has a separate workspace and committed lockfile with automatic peer installation disabled. The consumer suite checks the packed component's root import, MDX composition, Galley write/check and stale-output detection, and public declaration compatibility.
 
 - `galley-0.1` preserves the minimum supported Galley version, 0.1.1. Renovate updates are disabled for this environment.
 - `galley-current` tracks the latest supported Galley version through Renovate, starting at 0.1.4. Renovate maintains exact dependency pins and updates the environment's lockfile; CI runs the same consumer suite against each proposed update. Galley updates are limited to `^0.1.1`, matching tonnage's declared peer range.

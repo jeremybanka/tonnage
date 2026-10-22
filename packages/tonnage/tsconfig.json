@@ -22,7 +22,6 @@
 		"jsxImportSource": "galley.md",
 		"declaration": true,
 		"paths": {
-			"tonnage/galley": ["./src/galley.ts"],
 			"tonnage": [
 				"./src/index.ts"
 			]

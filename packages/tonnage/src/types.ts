@@ -16,10 +16,8 @@ export type TonnageConfig = {
 	exports?: boolean | TonnageExports
 	external?: readonly string[]
 	heading?: string
-	marker?: string
 	packageJson?: string
 	platform?: BundlePlatform
-	readme?: string
 	recipes?: readonly TonnageRecipe[]
 	target?: string
 }
@@ -43,12 +41,4 @@ export type TonnageReport = {
 	exports: readonly TonnageRow[]
 	packageName: string
 	recipes: readonly TonnageRecipeRow[]
-}
-
-export type TonnageMode = `check` | `write`
-
-export type TonnageRunResult = {
-	changed: boolean
-	readmePath: string
-	report: TonnageReport
 }

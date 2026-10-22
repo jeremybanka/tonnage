@@ -3,7 +3,7 @@ import { jsx } from "galley.md/jsx-runtime"
 
 import type { TonnageConfig, TonnageReport } from "./types.ts"
 
-/** Use Galley's JSX runtime directly so the source CLI stays executable by Node. */
+/** Build the report's headings, tables, and measurement notes as Galley elements. */
 export function reportContent(
 	report: TonnageReport,
 	config: TonnageConfig = {},

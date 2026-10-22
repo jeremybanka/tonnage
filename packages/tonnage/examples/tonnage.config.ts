@@ -5,7 +5,6 @@ const config: TonnageConfig = defineConfig({
 	exports: {
 		exclude: [`./package.json`],
 	},
-	marker: `my-package`,
 	recipes: [
 		{
 			entry: `examples/recipes/react-app.ts`,

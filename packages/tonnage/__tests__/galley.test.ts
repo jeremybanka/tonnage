@@ -5,9 +5,9 @@ import { fileURLToPath } from "node:url"
 
 import { afterEach, expect, test } from "vite-plus/test"
 
-import { compileMarkdown } from "galley.md"
+import { compileMarkdown, renderMarkdown } from "galley.md"
 
-import { createTonnageReport, renderTonnageMarkdown } from "../src/index.ts"
+import { Tonnage } from "../src/index.ts"
 
 const directories: string[] = []
 afterEach(async () => {
@@ -18,10 +18,47 @@ afterEach(async () => {
 	)
 })
 
+test.each(["default", "relative", "absolute"])(
+	"resolves the measured package with a %s directory",
+	async (mode) => {
+		const root = await fs.mkdtemp(path.join(os.tmpdir(), "tonnage-directory-"))
+		directories.push(root)
+		const directory = path.join(root, "package")
+		const docs = path.join(root, "docs")
+		await Promise.all([fs.mkdir(directory), fs.mkdir(docs)])
+		await fs.writeFile(
+			path.join(directory, "package.json"),
+			JSON.stringify({
+				name: "directory-fixture",
+				type: "module",
+				exports: "./index.ts",
+			}),
+		)
+		await fs.writeFile(
+			path.join(directory, "index.ts"),
+			"export const value = 42\n",
+		)
+		const context = {
+			directory: mode === "default" ? directory : docs,
+			path: path.join(mode === "default" ? directory : docs, "README.mdx"),
+		}
+		const props =
+			mode === "default"
+				? {}
+				: { directory: mode === "relative" ? "../package" : directory }
+		const markdown = await renderMarkdown(
+			await Tonnage(props, context),
+			context,
+		)
+		expect(markdown).toContain("`directory-fixture`")
+		expect(markdown).toMatch(/[1-9][0-9,]* B/)
+	},
+)
+
 test("a tonnage component measures real imports beside an embedded source example", async () => {
 	const directory = await fs.mkdtemp(path.join(os.tmpdir(), "tonnage-galley-"))
 	directories.push(directory)
-	const component = fileURLToPath(new URL("../src/galley.ts", import.meta.url))
+	const component = fileURLToPath(new URL("../src/index.ts", import.meta.url))
 	await fs.writeFile(
 		path.join(directory, "package.json"),
 		JSON.stringify({
@@ -53,8 +90,10 @@ import Example from './recipe.ts' with { type: 'code', lang: 'ts' }
 `,
 	)
 	const markdown = await compileMarkdown(input)
-	const report = await createTonnageReport(config, directory)
-	expect(markdown).toContain(await renderTonnageMarkdown(report, config))
+	const context = { directory, path: input }
+	expect(markdown).toContain(
+		await renderMarkdown(await Tonnage({ config }, context), context),
+	)
 	expect(markdown).toContain("# Fixture")
 	expect(markdown).toContain("export { greet } from 'component-fixture'")
 	expect(markdown).toContain("## Bundle size")

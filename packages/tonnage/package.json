@@ -1,7 +1,7 @@
 {
 	"name": "tonnage",
 	"version": "0.3.0",
-	"description": "Keep deterministic bundle size reports in README files and CI.",
+	"description": "Bundle size reports for Galley documents.",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/jeremybanka/tonnage.git"
@@ -10,21 +10,14 @@
 	"author": "Jeremy Banka",
 	"type": "module",
 	"exports": {
-		"./galley": {
-			"types": "./dist/galley.d.mts",
-			"import": "./dist/galley.mjs"
-		},
 		".": {
-			"import": "./dist/index.mjs",
-			"types": "./dist/index.d.mts"
+			"types": "./dist/index.d.mts",
+			"import": "./dist/index.mjs"
 		},
 		"./package.json": "./package.json"
 	},
 	"main": "./dist/index.mjs",
 	"types": "./dist/index.d.mts",
-	"bin": {
-		"tonnage": "dist/cli.mjs"
-	},
 	"files": [
 		"AGENTS.md",
 		"CHANGELOG.md",
@@ -42,7 +35,6 @@
 		"test:watch": "vp test watch"
 	},
 	"dependencies": {
-		"comline": "0.9.0",
 		"esbuild": "0.28.2"
 	},
 	"devDependencies": {
