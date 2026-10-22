@@ -222,6 +222,9 @@ importers:
       dprint-plugin-yaml:
         specifier: 0.6.0
         version: 0.6.0
+      tonnage:
+        specifier: workspace:*
+        version: link:packages/tonnage
       typescript:
         specifier: 7.0.2
         version: 7.0.2
