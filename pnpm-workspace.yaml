@@ -43,6 +43,7 @@ minimumReleaseAgeExclude:
   - "@dprint/linux-x64-musl@0.64.1"
   - "@dprint/win32-arm64@0.64.1"
   - "@dprint/win32-x64@0.64.1"
+  - breakage
   - galley.md
   - vite-plus
   - "@voidzero-dev/*"

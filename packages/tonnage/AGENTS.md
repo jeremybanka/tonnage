@@ -2,6 +2,8 @@
 
 CI-first runtime JavaScript bundle measurement with checked-in README reports.
 
+- Install `galley.md@^0.1.1` alongside tonnage. It is a required peer for CLI rendering, the programmatic API, and MDX components.
+
 - Tonnage measures emitted minified JavaScript and level-9 gzip bytes. Do not include declarations, source maps, CSS, or other assets in those figures.
 - Public-module rows retain the complete runtime export surface. Recipe rows use reviewable entry files and tree-shake unused exports.
 - Treat each recipe as one realistic runtime boundary. Keep server and client recipes separate, and count shared modules once within each bundle.
