@@ -49,7 +49,7 @@
 		"@types/node": "26.6.5",
 		"breakage": "0.8.5",
 		"galley.md": "0.1.1",
-		"typescript": "7.1.0-dev.20261020.3"
+		"typescript": "7.1.0-dev.20261021.1"
 	},
 	"peerDependencies": {
 		"galley.md": "^0.1.1"
