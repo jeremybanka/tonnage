@@ -24,6 +24,26 @@
 	],
 	"packageRules": [
 		{
+			"description": "Preserve the minimum supported Galley consumer environment",
+			"matchFileNames": ["packages/tonnage/peer-environments/galley-0.1/**"],
+			"enabled": false
+		},
+		{
+			"description": "Keep the current consumer environment reproducible with exact dependency pins",
+			"matchFileNames": [
+				"packages/tonnage/peer-environments/galley-current/**"
+			],
+			"rangeStrategy": "pin"
+		},
+		{
+			"description": "Update the current Galley representative within tonnage's declared peer support",
+			"matchFileNames": [
+				"packages/tonnage/peer-environments/galley-current/**"
+			],
+			"matchPackageNames": ["galley.md"],
+			"allowedVersions": "^0.1.1"
+		},
+		{
 			"matchPackageNames": ["jdx/mise"],
 			"matchDatasources": ["github-releases"],
 			"ignoreUnstable": true

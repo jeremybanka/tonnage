@@ -38,7 +38,12 @@ Tonnage requires `galley.md` as a peer for report rendering and pins it as a dev
 
 ## Peer compatibility
 
-`test:breakage:peers` runs without task caching and exercises the packed package against the pinned Galley 0.1.1 representative under `packages/tonnage/peer-environments`. Its separate workspace and committed lockfile disable automatic peer installation. The consumer suite checks programmatic rendering, MDX composition, CLI write/check, and public declaration compatibility. Add a representative when adding a supported peer era, and retain coverage of existing eras.
+`test:breakage:peers` runs without task caching and exercises the packed package against every representative under `packages/tonnage/peer-environments`. Each environment has a separate workspace and committed lockfile with automatic peer installation disabled. The consumer suite checks programmatic rendering, MDX composition, CLI write/check, and public declaration compatibility.
+
+- `galley-0.1` preserves the minimum supported Galley version, 0.1.1. Renovate updates are disabled for this environment.
+- `galley-current` tracks the latest supported Galley version through Renovate, starting at 0.1.4. Renovate maintains exact dependency pins and updates the environment's lockfile; CI runs the same consumer suite against each proposed update. Galley updates are limited to `^0.1.1`, matching tonnage's declared peer range.
+
+When changing peer support, update the current environment's Renovate `allowedVersions` rule alongside the package's peer range. Add a representative when adding a supported peer era, and retain coverage of existing eras.
 
 Breakage compares peer requirements with the latest `tonnage@` release tag. The peer CI job fetches release history. Changesets supplies the planned version; a minor release before 1.0 or a major release certifies intentional support changes. Consumer assertion failures cannot be certified away. The package-level `pack:breakage` command creates the archive; the root peer command builds before packing.
 

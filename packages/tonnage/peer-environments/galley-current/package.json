@@ -1,0 +1,11 @@
+{
+	"name": "tonnage-galley-current-contracts",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"dependencies": { "galley.md": "0.1.4" },
+	"devDependencies": {
+		"@types/node": "26.6.5",
+		"typescript": "7.0.2"
+	}
+}
