@@ -1,14 +1,11 @@
 import fs from "node:fs/promises"
 import path from "node:path"
 
-import { renderMarkdown } from "galley.md"
-
 import {
 	measureEntryWithPlugins,
 	measureImportsWithPlugins,
 } from "./measure.ts"
 import { withPackageResolver } from "./package-resolution.ts"
-import { reportContent } from "./report-content.ts"
 import type {
 	TonnageConfig,
 	TonnageExports,
@@ -86,18 +83,6 @@ export async function createTonnageReport(
 		packageName: packageJson.name,
 		recipes: recipeRows,
 	}
-}
-
-/** Serialize a report with the same Galley elements used by the document component. */
-export async function renderTonnageMarkdown(
-	report: TonnageReport,
-	config: TonnageConfig = {},
-): Promise<string> {
-	const directory = process.cwd()
-	return renderMarkdown(reportContent(report, config), {
-		directory,
-		path: path.resolve(directory, config.readme ?? "README.md"),
-	})
 }
 
 function selectExportImports(

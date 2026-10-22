@@ -1,18 +1,15 @@
-import { Tonnage } from "tonnage/galley"
+import { Tonnage } from "tonnage"
 import Configuration from "./examples/tonnage.config.ts" with { type: "code", lang: "ts" }
 import Recipe from "./examples/recipes/react-app.ts" with { type: "code", lang: "ts" }
 
 # tonnage
 
-Keep exact bundle size tables in a package README and fail CI when the checked-in
-numbers drift.
+Bundle size reports for [Galley](https://www.npmjs.com/package/galley.md) documents.
 
-The tool bundles real public package imports with esbuild, minifies the result,
-and reports JavaScript bytes before and after level-9 gzip. Public-module rows
-retain every runtime export; recipe entry files can select named exports and
-tree-shake the rest. Declarations, source maps, CSS, and other assets are not
-counted. Peer dependencies stay external, and shared modules are counted once
-per bundle.
+Tonnage bundles real public package imports with esbuild, minifies the result,
+and reports JavaScript bytes before and after level-9 gzip. Embed its component
+in a README source document, then use Galley to generate Markdown and detect
+stale reports in CI.
 
 ## Install
 
@@ -22,132 +19,104 @@ Install tonnage and its required Galley peer:
 pnpm add -D tonnage 'galley.md@^0.1.1'
 ```
 
-Galley is required for CLI and programmatic report rendering as well as MDX documents.
+## Use
+
+Create `README.mdx` beside your package manifest:
+
+```mdx
+import { Tonnage } from "tonnage"
+
+# My package
+
+<Tonnage config={{ platform: "node" }} />
+```
+
+Run `galley write` to generate `README.md`. Run `galley check` in CI to evaluate
+the document again and exit nonzero if its output is missing or stale. Keep the
+MDX source and generated Markdown in version control.
+
+The component defaults to measuring every public export except `./package.json`.
+Paths resolve relative to the containing document. To measure another package,
+pass `directory`, such as `<Tonnage directory="../my-package" />`; relative
+values resolve from the document's directory. The `packageJson` path resolves
+from that measurement directory; recipe entry paths resolve from the selected
+manifest's directory.
+
+Galley owns document evaluation and output files. See its
+[user guide](https://github.com/jeremybanka/galley#readme) for document composition
+and command options.
 
 ## Configure
 
-Add the generated-section comments to the target README, then create a config
-beside the package manifest. The complete configuration exhibit is in
+Pass configuration inline or import a reusable configuration using `defineConfig`.
+The complete configuration exhibit is in
 [examples/tonnage.config.ts](./examples/tonnage.config.ts).
+
 <Configuration />
 
-Each recipe points to a reviewable entry file such as
-[examples/recipes/react-app.ts](./examples/recipes/react-app.ts). Use named
-imports in these files to represent the runtime surface a real application uses;
-unused package exports are tree-shaken.
-
-<Recipe />
-
-The default generated-section marker is `default`; the example uses `my-package`.
-The opening and closing comments use the forms
-`tonnage:my-package:start` and `tonnage:my-package:end`.
-
-## Run
-
-Run `tonnage write` during development to update the README. Run
-`tonnage check` in CI to recompute the same report without writing and exit
-nonzero when the README is stale. Run `tonnage --help` to see both commands and
-their optional config-path arguments.
-
-Pass a config path with `tonnage check path/to/tonnage.config.ts` or
-`tonnage write path/to/tonnage.config.ts`. Otherwise, Tonnage looks in the current
-directory for `tonnage.config.ts`, then `tonnage.config.mjs`, then
-`tonnage.config.js`. Config modules may use top-level `await`. Missing configs
-are errors. Use `--` before a config path that starts with a dash.
-
-Unknown options are ignored with warnings on stderr. Warnings do not change the
-exit status; `check` still exits nonzero when the report is stale.
-
-By default the tool reads `package.json`, writes `README.md`, and measures every
-public export except `./package.json`. Paths are resolved relative to the config
-file. Use `exports.include` or `exports.exclude` to select subpaths, recipe entry
-files to describe realistic runtime boundaries, and `external` for non-peer
-imports that the package intentionally leaves to its consumers.
-
-### Shell completion
-
-With `tonnage` available on your shell's `PATH`, install completion for your shell:
-
-```sh
-tonnage completion install bash
-tonnage completion install zsh
-tonnage completion install fish
-tonnage completion install nushell
-tonnage completion install carapace
-```
-
-Choose the integration you use. Completion suggests commands, help options, and
-config paths without loading your config or measuring bundles. Installation
-checks the shell's prerequisites and writes to its completion directory without
-editing shell profiles. It reports any setup needed for your shell. If Nushell
-already uses Carapace, install only the Carapace integration.
-
-Run `tonnage completion bash` (or another target above) to print the integration
-file without installing it. The `completion` command and comline's internal
-completion protocol commands are reserved for shell integration.
-
-## Report layout
-
-Generated reports adapt to the measurements they contain. An exports-only or
-recipes-only report puts its table directly below the configured report heading
-and describes only that type of measurement. A report with both types labels the
-tables `Package exports` and `Usage examples` so readers can distinguish complete
-runtime export surfaces from tree-shaken recipe bundles.
-
-Every layout states the exact measurement semantics: minified and level-9 gzip
-JavaScript bytes, with declarations, source maps, CSS, and other assets excluded.
-Peer dependencies remain external, and shared modules are counted once in each
-bundle.
-
-Reports use Galley's native table elements, with right-aligned byte columns and
-literal escaping for import names, entry paths, and recipe labels.
-
-For programmatic use, await both measurement and Markdown rendering:
-
-```ts
-import {
-	createTonnageReport,
-	defineConfig,
-	renderTonnageMarkdown,
-} from "tonnage"
-
-const config = defineConfig({ platform: "node" })
-const report = await createTonnageReport(config, process.cwd())
-const markdown = await renderTonnageMarkdown(report, config)
-```
-
-## Package resolution and platforms
-
-Tonnage resolves the package's own public import name from the manifest selected
-by `packageJson`; a workspace package does not need to install or declare itself
-as a dependency. Root and subpath imports still go through esbuild's package
-resolver, so the manifest's `exports` restrictions and conditions apply. Runtime
-dependencies resolve from the measured package, while its peer dependencies stay
-external.
-
-The default `platform` is `neutral`. For packages without `exports`, Tonnage
-configures neutral resolution to try the `module` field and then `main`, so
-main-only packages and dependencies are actionable by default. With conditional
-`exports`, neutral does not enable the `browser` or `node` condition, so exports
-commonly fall through to their `default` target. Set `platform` to `browser` or
-`node` when that runtime is what you want to measure; those choices retain
-esbuild's native export conditions and main-field behavior. A recipe's
-`platform` overrides the report-wide setting for that recipe.
-
-## MDX documents
-
-Use [galley.md](https://www.npmjs.com/package/galley.md) to compose a README from source examples and reports:
+Import it explicitly in your document:
 
 ```mdx
-import { Tonnage } from "tonnage/galley"
-import config from "./tonnage.config.ts"
-import Example from "./examples/recipes/react-app.ts" with { type: "code", lang: "ts" }
-
-<Example />
+import { Tonnage } from "tonnage"
+import config from "./examples/tonnage.config.ts"
 
 <Tonnage config={config} />
 ```
 
-The component resolves paths relative to the containing document. Pass `directory` to measure another package. It produces the same tables as the CLI without writing a README or requiring generated-section markers. Tonnage uses your installed Galley peer; run `galley write` and `galley check` when authoring documents.
+Importing configuration from another folder does not change path resolution.
+Set `packageJson` to
+select a manifest, `exports.include` or `exports.exclude` to select subpaths,
+and `exports: false` to report only recipes. Use `heading` to customize the report
+heading and `target` to set esbuild's JavaScript target. Use `external` for
+additional imports intentionally supplied by consumers; peer dependencies are
+already external.
 
-<Tonnage config={{ platform: "node", exports: { include: [".", "./galley"] } }} />
+Each recipe points to a reviewable entry file such as
+[examples/recipes/react-app.ts](./examples/recipes/react-app.ts). Use named
+imports to represent the runtime surface a real application uses; unused package
+exports are tree-shaken. Keep server and client recipes separate.
+
+<Recipe />
+
+The public API consists of `Tonnage`, `defineConfig`, and the `TonnageProps`,
+`TonnageConfig`, `TonnageExports`, `TonnageRecipe`, and `BundlePlatform` types.
+
+## Report layout
+
+Public-module rows retain the complete runtime export surface. Recipe rows
+bundle their entry files and tree-shake unused exports. Exports-only and
+recipes-only reports put their table directly below the report heading; a report
+with both labels its tables `Package exports` and `Usage examples`.
+
+Sizes count minified JavaScript and level-9 gzip bytes. Declarations, source
+maps, CSS, and other assets are excluded. Peer dependencies stay external, and
+shared modules are counted once per bundle. Reports use Galley's native table
+elements, with right-aligned byte columns and literal escaping for import names,
+entry paths, and recipe labels.
+
+## Package resolution and platforms
+
+Tonnage resolves the package's own public import name from the selected manifest;
+a workspace package does not need to install itself as a dependency. Root and
+subpath imports go through esbuild's package resolver, so export restrictions
+and conditions apply. Runtime dependencies resolve from the measured package.
+
+The default `platform` is `neutral`. For packages without `exports`, neutral
+resolution tries `module` and then `main`. With conditional `exports`, neutral
+does not enable the `browser` or `node` condition, so exports commonly fall
+through to `default`. Set `platform` to `browser` or `node` for those runtimes;
+a recipe's `platform` overrides the report-wide setting.
+
+## Migrating from the standalone workflow
+
+Move your maintained README content to `README.mdx` and replace generated-section
+markers with `<Tonnage config={config} />`. Remove `marker` and `readme` from the
+configuration. Import `Tonnage` from `tonnage` instead of `tonnage/galley`, and
+replace `tonnage write` / `tonnage check` scripts with `galley write` /
+`galley check`. Galley generates the entire README from its MDX source.
+
+The tonnage executable, shell completion, standalone measurement/report APIs,
+and Markdown section-editing helpers have been removed. Reusable configurations
+can continue to use `defineConfig`; render reports through the component.
+
+<Tonnage config={{ platform: "node", exports: { include: ["."] } }} />

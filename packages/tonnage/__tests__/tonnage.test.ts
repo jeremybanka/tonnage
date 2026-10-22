@@ -4,20 +4,23 @@ import path from "node:path"
 
 import { describe, expect, test } from "vite-plus/test"
 
-import { Markdown } from "galley.md"
+import { Markdown, renderMarkdown } from "galley.md"
 
-import {
-	createTonnageReport,
-	measureImports,
-	renderTonnageMarkdown,
-	runTonnage,
-	tonnageMarkers,
-	updateGeneratedSection,
-} from "../src/index.ts"
+import { measureImports } from "../src/measure.ts"
+import { createTonnageReport } from "../src/report.ts"
+import { reportContent } from "../src/report-content.ts"
+import type { TonnageConfig, TonnageReport } from "../src/types.ts"
+
+function renderReport(report: TonnageReport, config: TonnageConfig = {}) {
+	return renderMarkdown(reportContent(report, config), {
+		directory: process.cwd(),
+		path: path.resolve("README.mdx"),
+	})
+}
 
 describe(`tonnage reports`, () => {
 	test(`renders an exports-only report without recipe details or a subsection`, async () => {
-		const markdown = await renderTonnageMarkdown({
+		const markdown = await renderReport({
 			exports: [
 				{
 					gzipBytes: 48,
@@ -38,7 +41,7 @@ describe(`tonnage reports`, () => {
 	})
 
 	test(`renders a recipes-only report without export details or a subsection`, async () => {
-		const markdown = await renderTonnageMarkdown({
+		const markdown = await renderReport({
 			exports: [],
 			packageName: `fixture-package`,
 			recipes: [
@@ -59,7 +62,7 @@ describe(`tonnage reports`, () => {
 	})
 
 	test(`labels both table types in a combined report`, async () => {
-		const markdown = await renderTonnageMarkdown({
+		const markdown = await renderReport({
 			exports: [
 				{
 					gzipBytes: 48,
@@ -88,7 +91,7 @@ describe(`tonnage reports`, () => {
 	test("preserves literal table text and code while aligning byte columns", async () => {
 		const importName = "@fixture/a|b`<c>&"
 		const entry = "./examples/a|b`<c>&.ts"
-		const markdown = await renderTonnageMarkdown({
+		const markdown = await renderReport({
 			packageName: importName,
 			exports: [
 				{
@@ -133,7 +136,7 @@ describe(`tonnage reports`, () => {
 	})
 
 	test("renders an empty report without tables or measurement-specific prose", async () => {
-		const markdown = await renderTonnageMarkdown(
+		const markdown = await renderReport(
 			{ packageName: "fixture", exports: [], recipes: [] },
 			{ heading: "Size [budget]" },
 		)
@@ -210,7 +213,7 @@ describe(`tonnage reports`, () => {
 			(report.exports[0]?.rawBytes ?? 0) + (report.exports[1]?.rawBytes ?? 0),
 		)
 		expect(report.recipes[0]?.entry).toBe(`recipe.js`)
-		const markdown = await renderTonnageMarkdown(report)
+		const markdown = await renderReport(report)
 		expect(markdown).toContain(`shared modules`)
 		expect(markdown).toContain(
 			`Report maintained with [tonnage](https://github.com/jeremybanka/tonnage).`,
@@ -303,56 +306,16 @@ describe(`tonnage reports`, () => {
 			expect(measurement).toEqual(expected)
 		},
 	)
-
-	test(`writes generated README sections and detects drift`, async () => {
-		const fixture = await makeFixture()
-		const { end, start } = tonnageMarkers(`fixture`)
-		await fs.writeFile(
-			fixture.readmePath,
-			[`# Fixture`, ``, start, `stale`, end, ``].join(`\n`),
-		)
-		const config = {
-			marker: `fixture`,
-			packageJson: `package.json`,
-			readme: `README.md`,
-		}
-
-		const stale = await runTonnage(config, {
-			configDirectory: fixture.directory,
-			mode: `check`,
-		})
-		expect(stale.changed).toBe(true)
-
-		const written = await runTonnage(config, {
-			configDirectory: fixture.directory,
-			mode: `write`,
-		})
-		expect(written.changed).toBe(true)
-
-		const current = await runTonnage(config, {
-			configDirectory: fixture.directory,
-			mode: `check`,
-		})
-		expect(current.changed).toBe(false)
-	})
-
-	test(`requires one ordered marker pair`, () => {
-		expect(() => updateGeneratedSection(`# README`, `report`)).toThrow(
-			`README must contain exactly one`,
-		)
-	})
 })
 
 async function makeFixture(): Promise<{
 	directory: string
 	entryPath: string
-	readmePath: string
 }> {
 	const directory = await fs.mkdtemp(path.join(os.tmpdir(), `tonnage-test-`))
 	const entryPath = path.join(directory, `index.js`)
 	const featurePath = path.join(directory, `feature.js`)
 	const recipePath = path.join(directory, `recipe.js`)
-	const readmePath = path.join(directory, `README.md`)
 	const compressibleText = `tonnage bundle size `.repeat(200)
 
 	await Promise.all([
@@ -377,10 +340,9 @@ async function makeFixture(): Promise<{
 			recipePath,
 			`export { feature } from "fixture-package"; export { feature as directFeature } from "fixture-package/feature";`,
 		),
-		fs.writeFile(readmePath, `# Fixture\n`),
 	])
 
-	return { directory, entryPath, readmePath }
+	return { directory, entryPath }
 }
 
 async function makeConditionalExportsFixture(): Promise<{

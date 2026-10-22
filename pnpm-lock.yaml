@@ -234,9 +234,6 @@ importers:
 
   packages/tonnage:
     dependencies:
-      comline:
-        specifier: 0.9.0
-        version: 0.9.0(arktype@2.2.8)
       esbuild:
         specifier: 0.28.2
         version: 0.28.2

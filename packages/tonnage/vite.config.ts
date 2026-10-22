@@ -17,13 +17,11 @@ export default defineConfig({
 				onlyBundle: [],
 			},
 			dts: {
-				entry: ["src/index.ts", "src/galley.ts"],
+				entry: ["src/index.ts"],
 				sourcemap: true,
 			},
 			entry: {
-				cli: "src/cli.ts",
 				index: "src/index.ts",
-				galley: "src/galley.ts",
 			},
 			format: "esm",
 			outDir: "dist",
