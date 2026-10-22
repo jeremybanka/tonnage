@@ -10,6 +10,16 @@ tree-shake the rest. Declarations, source maps, CSS, and other assets are not
 counted. Peer dependencies stay external, and shared modules are counted once
 per bundle.
 
+## Install
+
+Install tonnage and its required Galley peer:
+
+```sh
+pnpm add -D tonnage 'galley.md@^0.1.1'
+```
+
+Galley is required for CLI and programmatic report rendering as well as MDX documents.
+
 ## Configure
 
 Add the generated-section comments to the target README, then create a config
@@ -162,7 +172,7 @@ import Example from "./examples/recipes/react-app.ts" with { type: "code", lang:
 <Tonnage config={config} />
 ```
 
-The component resolves paths relative to the containing document. Pass `directory` to measure another package. It produces the same tables as the CLI without writing a README or requiring generated-section markers. Tonnage includes Galley as a runtime dependency; add `galley.md` directly to your project's development dependencies to run `galley write` and `galley check` when authoring documents.
+The component resolves paths relative to the containing document. Pass `directory` to measure another package. It produces the same tables as the CLI without writing a README or requiring generated-section markers. Tonnage uses your installed Galley peer; run `galley write` and `galley check` when authoring documents.
 
 ## Bundle size
 
@@ -170,9 +180,9 @@ Package export sizes include complete runtime export surfaces.
 
 Sizes are exact minified and level-9 gzip JavaScript byte counts. Declarations, source maps, CSS, and other assets are excluded. Peer dependencies stay external, and shared modules are counted once per bundle.
 
-| Import           | Minified JS |   Gzip JS |
-| ---------------- | ----------: | --------: |
-| `tonnage`        |   491,915 B | 153,965 B |
-| `tonnage/galley` |   484,581 B | 151,561 B |
+| Import           | Minified JS |  Gzip JS |
+| ---------------- | ----------: | -------: |
+| `tonnage`        |    50,614 B | 18,071 B |
+| `tonnage/galley` |    49,315 B | 17,579 B |
 
 Report maintained with [tonnage](https://github.com/jeremybanka/tonnage).

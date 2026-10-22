@@ -1,0 +1,6 @@
+packages: []
+autoInstallPeers: false
+strictPeerDependencies: true
+hoist: false
+minimumReleaseAgeExclude:
+  - galley.md@0.1.1

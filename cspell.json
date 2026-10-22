@@ -1,12 +1,13 @@
 {
 	"version": "0.2",
 	"useGitignore": true,
-	"ignorePaths": ["pnpm-lock.yaml"],
+	"ignorePaths": ["**/pnpm-lock.yaml"],
 	"words": [
 		"comline",
 		"esbuild",
 		"jeremybanka",
 		"malva",
+		"manypkg",
 		"mdx",
 		"minified",
 		"subpaths",

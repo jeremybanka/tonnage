@@ -9,3 +9,5 @@ artifacts/
 .mise.local.toml
 .env
 *.log
+.breakage/
+**/peer-environments/*/test/
