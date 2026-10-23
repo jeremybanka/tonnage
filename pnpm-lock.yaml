@@ -245,8 +245,8 @@ importers:
         specifier: 0.8.5
         version: 0.8.5
       galley.md:
-        specifier: 0.1.3
-        version: 0.1.3(arktype@2.2.8)
+        specifier: 0.1.4
+        version: 0.1.4(arktype@2.2.8)
       typescript:
         specifier: 7.1.0-dev.20261021.1
         version: 7.1.0-dev.20261021.1
@@ -2258,8 +2258,8 @@ packages:
   function-bind@1.1.2:
     resolution: {integrity: sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==}
 
-  galley.md@0.1.3:
-    resolution: {integrity: sha512-1I3UA5pLNWbN3IUrse0/ItqsDNLc5uSyzYJlX6zeSJwsPKN+lmcD/16NbWZq3iojzFOujzCQwtTKBMqtNyYf3g==}
+  galley.md@0.1.4:
+    resolution: {integrity: sha512-39yOqvq4QcO0gOVtl39DvKKKJhbiGF13qUzFbqQptp0ODKK8lmwegXSYQLq/VSVA2Rcue0BChhj8b3l+8qhQWg==}
     engines: {node: '>=22.18.0', pnpm: 12.15.0}
     hasBin: true
 
@@ -4938,7 +4938,7 @@ snapshots:
 
   function-bind@1.1.2: {}
 
-  galley.md@0.1.3(arktype@2.2.8):
+  galley.md@0.1.4(arktype@2.2.8):
     dependencies:
       '@mdx-js/mdx': 3.1.1
       '@types/mdast': 4.0.4
