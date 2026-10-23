@@ -3,4 +3,7 @@ autoInstallPeers: false
 strictPeerDependencies: true
 hoist: false
 minimumReleaseAgeExclude:
+  # Consumed jeremybanka packages are exempt at every version.
+  - comline
   - galley.md
+  - treetrunks

@@ -101,6 +101,20 @@
 		{
 			"matchManagers": ["github-actions"],
 			"dependencyDashboardApproval": true
+		},
+		{
+			"description": "Exempt consumed jeremybanka packages at every version; keep aligned with pnpm-workspace.yaml",
+			"matchDatasources": [
+				"npm"
+			],
+			"matchPackageNames": [
+				"breakage",
+				"comline",
+				"galley.md",
+				"takua",
+				"treetrunks"
+			],
+			"minimumReleaseAge": null
 		}
 	]
 }
