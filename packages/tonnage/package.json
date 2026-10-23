@@ -40,7 +40,7 @@
 	"devDependencies": {
 		"@types/node": "26.6.5",
 		"breakage": "0.8.5",
-		"galley.md": "0.1.4",
+		"galley.md": "0.1.5",
 		"typescript": "7.1.0-dev.20261022.1"
 	},
 	"peerDependencies": {
