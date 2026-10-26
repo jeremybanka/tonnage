@@ -1,8 +1,11 @@
-import type { NpmConfig } from "breakage"
+import { changesetsReleaseDelta } from "@breakage/changesets"
+import { defineConfig, semverPolicy, type BreakageConfig } from "breakage"
 
-import { releaseIntent } from "../../scripts/breakage-peers.ts"
-
-export default {
+const config: BreakageConfig = defineConfig({
+	release: {
+		resolveDelta: changesetsReleaseDelta(),
+		policy: semverPolicy({ beforeV1: "minor" }),
+	},
 	npm: {
 		artifact: ".breakage/package.tgz",
 		representatives: "peer-environments/*",
@@ -16,9 +19,7 @@ export default {
 			},
 		},
 		baseline: { tagPattern: "refs/tags/tonnage@" },
-		releaseIntent,
-		certifyBreaking: ({ previousVersion, release }) =>
-			release.delta === "major" ||
-			(previousVersion.startsWith("0.") && release.delta === "minor"),
-	} satisfies NpmConfig,
-}
+	},
+})
+
+export default config
