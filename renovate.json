@@ -108,6 +108,7 @@
 				"npm"
 			],
 			"matchPackageNames": [
+				"@breakage/changesets",
 				"breakage",
 				"comline",
 				"galley.md",

@@ -38,8 +38,9 @@
 		"esbuild": "0.28.2"
 	},
 	"devDependencies": {
+		"@breakage/changesets": "0.1.0",
 		"@types/node": "26.6.5",
-		"breakage": "0.8.5",
+		"breakage": "0.10.0",
 		"galley.md": "0.1.5",
 		"typescript": "7.1.0-dev.20261024.1"
 	},
