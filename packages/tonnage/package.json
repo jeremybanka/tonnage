@@ -45,7 +45,7 @@
 		"typescript": "7.1.0-dev.20261026.1"
 	},
 	"peerDependencies": {
-		"galley.md": "^0.1.1 || ^0.3.0"
+		"galley.md": "^0.3.0"
 	},
 	"engines": {
 		"node": ">=22.18.0"
