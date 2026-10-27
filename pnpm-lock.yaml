@@ -724,6 +724,9 @@ packages:
     os: [linux]
     libc: [musl]
 
+  '@dprint/markdown@0.28.0':
+    resolution: {integrity: sha512-JK8RPPd1ie+iTgO10faxk1kbzmulhkQxgf9tZjOiyngLA/6PZWmV+HAgruLL3f+P12P3MPkMRIqIr3/jL9+l/g==}
+
   '@dprint/markdown@0.28.1':
     resolution: {integrity: sha512-H8E+0Rb9ERq7697iMQpVsa0KXj5I2Ta5Zo6QwvBNSksUKljXUj2TnAV/oCowtB9QFH/IMx93DYWwdvCDVZdKvA==}
 
@@ -3659,6 +3662,8 @@ snapshots:
 
   '@dprint/linux-x64-musl@0.64.3':
     optional: true
+
+  '@dprint/markdown@0.28.0': {}
 
   '@dprint/markdown@0.28.1': {}
 
