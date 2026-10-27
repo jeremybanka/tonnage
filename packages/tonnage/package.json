@@ -41,11 +41,11 @@
 		"@breakage/changesets": "0.1.0",
 		"@types/node": "26.6.5",
 		"breakage": "0.10.0",
-		"galley.md": "0.1.7",
+		"galley.md": "0.3.0",
 		"typescript": "7.1.0-dev.20261026.1"
 	},
 	"peerDependencies": {
-		"galley.md": "^0.1.1"
+		"galley.md": "^0.3.0"
 	},
 	"engines": {
 		"node": ">=22.18.0"

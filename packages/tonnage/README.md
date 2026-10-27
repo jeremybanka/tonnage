@@ -9,10 +9,10 @@ stale reports in CI.
 
 ## Install
 
-Install tonnage and its required Galley peer:
+Install tonnage and its required Galley 0.3 peer:
 
 ```sh
-pnpm add -D tonnage 'galley.md@^0.1.1'
+pnpm add -D tonnage 'galley.md@^0.3.0'
 ```
 
 ## Use
@@ -149,6 +149,6 @@ Sizes are exact minified and level-9 gzip JavaScript byte counts. Declarations, 
 
 | Import    | Minified JS |  Gzip JS |
 | --------- | ----------: | -------: |
-| `tonnage` |    49,281 B | 17,561 B |
+| `tonnage` |    49,510 B | 17,647 B |
 
 Report maintained with [tonnage](https://github.com/jeremybanka/tonnage).

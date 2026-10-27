@@ -1,4 +1,4 @@
-import type { Content, Element } from "galley.md"
+import { Markdown, type Content, type Element } from "galley.md"
 import { jsx } from "galley.md/jsx-runtime"
 
 import type { TonnageConfig, TonnageReport } from "./types.ts"
@@ -11,32 +11,28 @@ export function reportContent(
 	const hasExports = report.exports.length > 0
 	const hasRecipes = report.recipes.length > 0
 	const hasMultipleSections = hasExports && hasRecipes
-	const content = [jsx("h2", { children: config.heading ?? "Bundle size" })]
+	const content = [heading(2, config.heading ?? "Bundle size")]
 
 	if (hasExports)
 		content.push(
-			jsx("p", {
-				children:
-					"Package export sizes include complete runtime export surfaces.",
-			}),
+			paragraph(
+				"Package export sizes include complete runtime export surfaces.",
+			),
 		)
 	if (hasRecipes)
 		content.push(
-			jsx("p", {
-				children:
-					"Usage example sizes bundle their entry files and tree-shake unused exports.",
-			}),
+			paragraph(
+				"Usage example sizes bundle their entry files and tree-shake unused exports.",
+			),
 		)
 	content.push(
-		jsx("p", {
-			children:
-				"Sizes are exact minified and level-9 gzip JavaScript byte counts. Declarations, source maps, CSS, and other assets are excluded. Peer dependencies stay external, and shared modules are counted once per bundle.",
-		}),
+		paragraph(
+			"Sizes are exact minified and level-9 gzip JavaScript byte counts. Declarations, source maps, CSS, and other assets are excluded. Peer dependencies stay external, and shared modules are counted once per bundle.",
+		),
 	)
 
 	if (hasExports) {
-		if (hasMultipleSections)
-			content.push(jsx("h3", { children: "Package exports" }))
+		if (hasMultipleSections) content.push(heading(3, "Package exports"))
 		content.push(
 			table(
 				[
@@ -54,8 +50,7 @@ export function reportContent(
 	}
 
 	if (hasRecipes) {
-		if (hasMultipleSections)
-			content.push(jsx("h3", { children: "Usage examples" }))
+		if (hasMultipleSections) content.push(heading(3, "Usage examples"))
 		content.push(
 			table(
 				[
@@ -75,16 +70,21 @@ export function reportContent(
 	}
 
 	content.push(
-		jsx("p", {
-			children: [
-				"Report maintained with ",
-				jsx("a", {
-					href: "https://github.com/jeremybanka/tonnage",
-					children: "tonnage",
-				}),
-				".",
-			],
-		}),
+		jsx(
+			() => ({
+				type: "paragraph",
+				children: [
+					{ type: "text", value: "Report maintained with " },
+					{
+						type: "link",
+						url: "https://github.com/jeremybanka/tonnage",
+						children: [{ type: "text", value: "tonnage" }],
+					},
+					{ type: "text", value: "." },
+				],
+			}),
+			null,
+		),
 	)
 	return content
 }
@@ -101,7 +101,7 @@ function table(
 	columns: readonly { title: string; align?: "right" }[],
 	rows: readonly (readonly Content[])[],
 ): Element {
-	return jsx("table", {
+	return jsx(Markdown.Table, {
 		children: [
 			jsx("thead", {
 				children: jsx("tr", {
@@ -119,4 +119,20 @@ function table(
 			}),
 		],
 	})
+}
+
+// Return elements for the public component contract while constructing Markdown
+// nodes explicitly, independently of Galley's native JSX rendering policy.
+function heading(depth: 2 | 3, value: string): Element {
+	return jsx(
+		() => ({ type: "heading", depth, children: [{ type: "text", value }] }),
+		null,
+	)
+}
+
+function paragraph(value: string): Element {
+	return jsx(
+		() => ({ type: "paragraph", children: [{ type: "text", value }] }),
+		null,
+	)
 }
