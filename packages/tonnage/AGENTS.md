@@ -9,5 +9,6 @@ Runtime JavaScript bundle measurement for Galley documents.
 - Tonnage measures emitted minified JavaScript and level-9 gzip bytes. Do not include declarations, source maps, CSS, or other assets in those figures.
 - Public-module rows retain the complete runtime export surface. Recipe rows use reviewable entry files and tree-shake unused exports.
 - Treat each recipe as one realistic runtime boundary. Keep server and client recipes separate, and count shared modules once per bundle.
+- Build workspace packages before measuring them and point their public exports at the published output. Package imports ignore TypeScript `paths` aliases and `baseUrl` lookups, including for dependencies, peers, and JSX runtimes. Recipe compilation preserves applicable tsconfig JSX settings; use relative imports for recipe helpers.
 - Peer dependencies stay external by default. Set `includePeers: true` to count imported peers in export and recipe bundles; install them in the measured package's environment first. Explicit report-wide and recipe `external` entries still exclude matching imports, including peer subpaths.
 - The component returns Galley elements without writing files. Reports use explicit Markdown nodes and `Markdown.Table`. Its tables escape literal text and align byte columns to the right.
