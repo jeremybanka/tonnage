@@ -40,7 +40,7 @@
 	"devDependencies": {
 		"@breakage/changesets": "0.1.0",
 		"@types/node": "26.6.5",
-		"breakage": "0.10.0",
+		"breakage": "0.10.1",
 		"galley.md": "0.3.1",
 		"typescript": "7.1.0-dev.20261027.1"
 	},
