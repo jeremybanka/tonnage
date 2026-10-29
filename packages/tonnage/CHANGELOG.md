@@ -1,5 +1,11 @@
 # tonnage
 
+## 0.5.1
+
+### Patch Changes
+
+- 9bcb83f: Add `includePeers: true` to include imported peer dependencies in export and recipe bundle sizes while preserving explicit external exclusions and documenting the configured policy in reports.
+
 ## 0.5.0
 
 ### Minor Changes
