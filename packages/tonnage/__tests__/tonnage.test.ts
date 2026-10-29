@@ -2,11 +2,11 @@ import fs from "node:fs/promises"
 import os from "node:os"
 import path from "node:path"
 
-import { describe, expect, test } from "vite-plus/test"
+import { describe, expect, onTestFinished, test } from "vite-plus/test"
 
 import { Markdown, renderMarkdown } from "galley.md"
 
-import { measureImports } from "../src/measure.ts"
+import { measureEntry, measureImports } from "../src/measure.ts"
 import { createTonnageReport } from "../src/report.ts"
 import { reportContent } from "../src/report-content.ts"
 import type { TonnageConfig, TonnageReport } from "../src/types.ts"
@@ -162,6 +162,87 @@ describe(`tonnage reports`, () => {
 		expect(measurement.rawBytes).toBeGreaterThan(1_000)
 		expect(measurement.gzipBytes).toBeGreaterThan(0)
 		expect(measurement.gzipBytes).toBeLessThan(measurement.rawBytes)
+	})
+
+	test(`includes imported peers and their subpaths in export and recipe sizes when enabled`, async () => {
+		const { directory, entryPath } = await makePeerFixture()
+		const config = {
+			recipes: [{ name: `With peer`, entry: `recipe.ts` }],
+		}
+		const external = await createTonnageReport(config, directory)
+		const included = await createTonnageReport(
+			{ ...config, includePeers: true },
+			directory,
+		)
+		const expectedExport = await measureImports([entryPath], {
+			resolveDirectory: directory,
+		})
+		const expectedRecipe = await measureEntry(`recipe.ts`, {
+			resolveDirectory: directory,
+		})
+
+		expect(included.exports[0]).toMatchObject(expectedExport)
+		expect(included.recipes[0]).toMatchObject(expectedRecipe)
+		expect(included.exports[0]!.rawBytes).toBeGreaterThan(
+			external.exports[0]!.rawBytes + 1_000,
+		)
+		expect(included.recipes[0]!.rawBytes).toBeGreaterThan(
+			external.recipes[0]!.rawBytes + 1_000,
+		)
+		expect(included.recipes[0]!.rawBytes).toBeLessThan(
+			included.exports[0]!.rawBytes,
+		)
+		expect(await renderReport(external, config)).toContain(
+			`Peer dependencies stay external`,
+		)
+		const markdown = await renderReport(included, { includePeers: true })
+		expect(markdown).toContain(
+			`Imported peer dependencies are bundled unless explicitly external`,
+		)
+		expect(markdown).not.toContain(`Peer dependencies stay external`)
+	})
+
+	test(`explicit external entries override peer inclusion for exports and recipes`, async () => {
+		const { directory } = await makePeerFixture()
+		const config = {
+			recipes: [{ name: `With peer`, entry: `recipe.ts` }],
+		}
+		const baseline = await createTonnageReport(config, directory)
+		const reportExternal = await createTonnageReport(
+			{ ...config, includePeers: true, external: [`@fixture/peer`] },
+			directory,
+		)
+		const recipeExternal = await createTonnageReport(
+			{
+				includePeers: true,
+				recipes: [{ ...config.recipes[0]!, external: [`@fixture/peer`] }],
+			},
+			directory,
+		)
+
+		expect(reportExternal).toEqual(baseline)
+		expect(recipeExternal.recipes).toEqual(baseline.recipes)
+		expect(recipeExternal.exports[0]!.rawBytes).toBeGreaterThan(
+			baseline.exports[0]!.rawBytes + 1_000,
+		)
+	})
+
+	test(`requires imported peers to resolve only when inclusion is enabled`, async () => {
+		const { directory } = await makePeerFixture()
+		await fs.rm(path.join(directory, `node_modules`), { recursive: true })
+		const baseline = await createTonnageReport({}, directory)
+		expect(
+			await createTonnageReport({ includePeers: false }, directory),
+		).toEqual(baseline)
+		await expect(
+			createTonnageReport({ includePeers: true }, directory),
+		).rejects.toThrow(`Could not resolve "@fixture/peer`)
+		expect(
+			await createTonnageReport(
+				{ includePeers: true, external: [`@fixture/peer`] },
+				directory,
+			),
+		).toEqual(baseline)
 	})
 
 	test(`counts emitted runtime JavaScript only`, async () => {
@@ -477,4 +558,52 @@ async function pathExists(filePath: string): Promise<boolean> {
 		() => true,
 		() => false,
 	)
+}
+
+async function makePeerFixture(): Promise<{
+	directory: string
+	entryPath: string
+}> {
+	const directory = await fs.mkdtemp(path.join(os.tmpdir(), `tonnage-peers-`))
+	onTestFinished(() => fs.rm(directory, { recursive: true, force: true }))
+	const peerDirectory = path.join(directory, `node_modules`, `@fixture`, `peer`)
+	await fs.mkdir(peerDirectory, { recursive: true })
+	const entryPath = path.join(directory, `index.ts`)
+	await Promise.all([
+		fs.writeFile(
+			path.join(directory, `package.json`),
+			JSON.stringify({
+				name: `peer-fixture`,
+				type: `module`,
+				exports: `./index.ts`,
+				peerDependencies: { "@fixture/peer": `*`, "unused-peer": `*` },
+				peerDependenciesMeta: { "unused-peer": { optional: true } },
+			}),
+		),
+		fs.writeFile(
+			entryPath,
+			`export { shared } from "@fixture/peer"; export { feature } from "@fixture/peer/feature"; export const unused = ${JSON.stringify(`unused export `.repeat(200))};`,
+		),
+		fs.writeFile(
+			path.join(directory, `recipe.ts`),
+			`export { shared, feature } from "./index.ts"; export { shared as direct } from "@fixture/peer";`,
+		),
+		fs.writeFile(
+			path.join(peerDirectory, `package.json`),
+			JSON.stringify({
+				name: `@fixture/peer`,
+				type: `module`,
+				exports: { ".": `./index.ts`, "./feature": `./feature.ts` },
+			}),
+		),
+		fs.writeFile(
+			path.join(peerDirectory, `index.ts`),
+			`export const shared = ${JSON.stringify(`shared peer code `.repeat(200))};`,
+		),
+		fs.writeFile(
+			path.join(peerDirectory, `feature.ts`),
+			`import { shared } from "./index.ts"; export const feature = shared + ${JSON.stringify(`peer feature `.repeat(200))};`,
+		),
+	])
+	return { directory, entryPath }
 }

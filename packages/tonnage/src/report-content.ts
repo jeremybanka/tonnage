@@ -27,7 +27,10 @@ export function reportContent(
 		)
 	content.push(
 		paragraph(
-			"Sizes are exact minified and level-9 gzip JavaScript byte counts. Declarations, source maps, CSS, and other assets are excluded. Peer dependencies stay external, and shared modules are counted once per bundle.",
+			"Sizes are exact minified and level-9 gzip JavaScript byte counts. Declarations, source maps, CSS, and other assets are excluded. " +
+				(config.includePeers
+					? "Imported peer dependencies are bundled unless explicitly external, and shared modules are counted once per bundle."
+					: "Peer dependencies stay external, and shared modules are counted once per bundle."),
 		),
 	)
 

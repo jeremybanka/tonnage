@@ -36,7 +36,10 @@ export async function createTonnageReport(
 
 	const resolveDirectory = path.dirname(packageJsonPath)
 	const peerDependencies = Object.keys(packageJson.peerDependencies ?? {})
-	const external = unique([...peerDependencies, ...(config.external ?? [])])
+	const external = unique([
+		...(config.includePeers ? [] : peerDependencies),
+		...(config.external ?? []),
+	])
 	const exportImports = selectExportImports(
 		packageJson.name,
 		packageJson.exports,

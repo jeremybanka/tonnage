@@ -56,6 +56,7 @@ const config: TonnageConfig = defineConfig({
 	exports: {
 		exclude: [`./package.json`],
 	},
+	includePeers: true,
 	recipes: [
 		{
 			entry: `examples/recipes/react-app.ts`,
@@ -85,7 +86,21 @@ select a manifest, `exports.include` or `exports.exclude` to select subpaths,
 and `exports: false` to report only recipes. Use `heading` to customize the report
 heading and `target` to set esbuild's JavaScript target. Use `external` for
 additional imports intentionally supplied by consumers; peer dependencies are
-already external.
+external by default.
+
+Set `includePeers: true` to include imported peer dependencies in both package
+export and recipe sizes:
+
+```mdx
+<Tonnage config={{ includePeers: true }} />
+```
+
+Install the peers in the measured package's environment first. Tonnage bundles
+their resolved installed versions and tree-shakes unused code; it does not add
+unimported peers to the bundle. Explicit `external` entries still take precedence,
+including recipe-specific entries, so you can exclude individual peers and their
+subpaths even when `includePeers` is enabled. An imported peer that cannot be
+resolved causes measurement to fail unless it is external.
 
 Each recipe points to a reviewable entry file such as
 [examples/recipes/react-app.ts](./examples/recipes/react-app.ts). Use named
@@ -111,7 +126,9 @@ recipes-only reports put their table directly below the report heading; a report
 with both labels its tables `Package exports` and `Usage examples`.
 
 Sizes count minified JavaScript and level-9 gzip bytes. Declarations, source
-maps, CSS, and other assets are excluded. Peer dependencies stay external, and
+maps, CSS, and other assets are excluded. Peer dependencies stay external by
+default; enable `includePeers` to count their bundled code. The report notes
+which policy is configured, and
 shared modules are counted once per bundle. Reports use Galley's native table
 elements, with right-aligned byte columns and literal escaping for import names,
 entry paths, and recipe labels.
@@ -149,6 +166,6 @@ Sizes are exact minified and level-9 gzip JavaScript byte counts. Declarations, 
 
 | Import    | Minified JS |  Gzip JS |
 | --------- | ----------: | -------: |
-| `tonnage` |    49,510 B | 17,647 B |
+| `tonnage` |    49,669 B | 17,693 B |
 
 Report maintained with [tonnage](https://github.com/jeremybanka/tonnage).
