@@ -117,6 +117,18 @@ a workspace package does not need to install itself as a dependency. Root and
 subpath imports go through esbuild's package resolver, so export restrictions
 and conditions apply. Runtime dependencies resolve from the measured package.
 
+Package imports, including imported dependencies, included peers, and JSX
+runtimes, ignore workspace TypeScript `paths` aliases and `baseUrl` lookups.
+They use the installed packages' public exports instead. Build workspace
+packages before measuring them, and point their exports at the output you
+publish; Tonnage follows those declarations without assuming an output directory.
+Shared imports resolving to the same file are counted once per bundle.
+
+Recipe compilation still uses the applicable tsconfig settings, including
+inherited JSX mode, factory, fragment factory, and import source. Use relative
+paths for recipe helpers rather than development-only aliases. Peer inclusion
+and explicit `external` exclusions continue to apply.
+
 The default `platform` is `neutral`. For packages without `exports`, neutral
 resolution tries `module` and then `main`. With conditional `exports`, neutral
 does not enable the `browser` or `node` condition, so exports commonly fall

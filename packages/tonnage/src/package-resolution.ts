@@ -2,7 +2,7 @@ import fs from "node:fs/promises"
 import os from "node:os"
 import path from "node:path"
 
-import type { Plugin } from "esbuild"
+import { context, type Plugin, type PluginBuild } from "esbuild"
 
 export async function withPackageResolver<Result>(
 	packageName: string,
@@ -26,22 +26,66 @@ export async function withPackageResolver<Result>(
 			process.platform === `win32` ? `junction` : `dir`,
 		)
 
-		const filter = new RegExp(`^${escapeRegExp(packageName)}(?:/.*)?$`)
 		const plugin: Plugin = {
 			name: `tonnage-package-resolution`,
-			setup(build) {
-				build.onResolve({ filter }, async (args) => {
-					if (args.resolveDir === temporaryDirectory) {
+			async setup(build) {
+				// Resolve packages without development aliases, but leave the actual
+				// build's tsconfig discovery intact for JSX and other transforms.
+				// This context only resolves paths; it never compiles any files.
+				let resolutionBuild: PluginBuild
+				const resolver = await context({
+					...build.initialOptions,
+					entryPoints: [],
+					stdin: { contents: `` },
+					tsconfigRaw: {},
+					plugins: [
+						{
+							name: `tonnage-alias-free-resolution`,
+							setup(resolverBuild) {
+								resolutionBuild = resolverBuild
+							},
+						},
+					],
+				})
+				build.onEnd(() => resolver.dispose())
+				build.onDispose(() => {
+					void resolver.dispose()
+				})
+
+				const nativeResolution = {}
+				build.onResolve({ filter: /.*/ }, async (args) => {
+					if (
+						args.pluginData === nativeResolution ||
+						args.kind === `entry-point` ||
+						path.isAbsolute(args.path) ||
+						/^\.{1,2}(?:\/|$)/.test(args.path)
+					) {
 						return
 					}
 
-					return build.resolve(args.path, {
+					const isSelfImport =
+						args.path === packageName || args.path.startsWith(`${packageName}/`)
+					const result = await resolutionBuild.resolve(args.path, {
 						importer: args.importer,
 						kind: args.kind,
 						namespace: args.namespace,
-						resolveDir: temporaryDirectory,
+						resolveDir: isSelfImport ? temporaryDirectory : args.resolveDir,
 						with: args.with,
 					})
+					if (result.errors.length > 0) {
+						const native = await build.resolve(args.path, {
+							importer: args.importer,
+							kind: args.kind,
+							namespace: args.namespace,
+							resolveDir: args.resolveDir,
+							with: args.with,
+							pluginData: nativeResolution,
+						})
+						// Native resolution knows whether an unresolved import is guarded
+						// by try/catch. Delegate only if it cannot fall back to an alias.
+						if (native.errors.length > 0) return
+					}
+					return result
 				})
 			},
 		}
@@ -50,8 +94,4 @@ export async function withPackageResolver<Result>(
 	} finally {
 		await fs.rm(temporaryDirectory, { force: true, recursive: true })
 	}
-}
-
-function escapeRegExp(value: string): string {
-	return value.replace(/[.*+?^${}()|[\]\\]/g, `\\$&`)
 }
