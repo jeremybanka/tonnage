@@ -1,6 +1,6 @@
 {
 	"name": "tonnage",
-	"version": "0.5.1",
+	"version": "0.5.2",
 	"description": "Bundle size reports for Galley documents.",
 	"repository": {
 		"type": "git",
