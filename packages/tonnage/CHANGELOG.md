@@ -1,5 +1,11 @@
 # tonnage
 
+## 0.5.2
+
+### Patch Changes
+
+- e60aa87: Resolve package imports through public exports without workspace TypeScript paths aliases or baseUrl lookups, preventing mixed source and built dependency copies while preserving recipe JSX settings, platform conditions, peer inclusion, and explicit externals.
+
 ## 0.5.1
 
 ### Patch Changes
