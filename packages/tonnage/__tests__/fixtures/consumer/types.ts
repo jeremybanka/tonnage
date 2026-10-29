@@ -16,6 +16,7 @@ const recipe: TonnageRecipe = {
 }
 const config: TonnageConfig = defineConfig({
 	exports,
+	includePeers: true,
 	recipes: [recipe],
 	platform,
 })

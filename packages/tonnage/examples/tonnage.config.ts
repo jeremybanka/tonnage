@@ -5,6 +5,7 @@ const config: TonnageConfig = defineConfig({
 	exports: {
 		exclude: [`./package.json`],
 	},
+	includePeers: true,
 	recipes: [
 		{
 			entry: `examples/recipes/react-app.ts`,

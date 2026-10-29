@@ -16,6 +16,8 @@ export type TonnageConfig = {
 	exports?: boolean | TonnageExports
 	external?: readonly string[]
 	heading?: string
+	/** Bundle imported peer dependencies unless explicitly external. Defaults to false. */
+	includePeers?: boolean
 	packageJson?: string
 	platform?: BundlePlatform
 	recipes?: readonly TonnageRecipe[]
