@@ -24,6 +24,10 @@
 	],
 	"packageRules": [
 		{
+			"groupName": "dprint",
+			"matchPackageNames": ["dprint", "@dprint/*", "/^dprint-plugin-/"]
+		},
+		{
 			"description": "Keep the current consumer environment reproducible with exact dependency pins",
 			"matchFileNames": [
 				"packages/tonnage/peer-environments/galley-current/**"
