@@ -49,3 +49,9 @@ Breakage compares peer requirements with the latest `tonnage@` release tag. The 
 The consumer fixture uses `tsconfig.consumer.json` explicitly inside Breakage so its type check resolves the installed package. Keeping that config separate from automatic `tsconfig.json` discovery lets `check:vp` validate workspace source before a build.
 
 Breakage removes its disposable `test/` directory after each run. Do not run checks against the same representative concurrently; inspect any stage left by an interrupted process before removing it.
+
+## Unused code
+
+Run `pnpm run check:unused` to check workspace files, exports, types, and dependencies. Run `pnpm run check:unused:production` to check production entrypoints without tests, examples, or contributor scripts keeping source code reachable. Both commands participate in `check` and run sequentially in a dedicated Knip CI job alongside the other static checks. Findings fail the check; neither command deletes code.
+
+`knip.ts` preserves published entrypoint exports and accounts for executable configuration, workers, examples, and fixture projects. Review findings against public API and dynamically loaded inputs before removing code; source reachability does not measure final bundle size.
