@@ -34,7 +34,7 @@ export type TonnageRow = BundleMeasurement & {
 	name: string
 }
 
-export type TonnageRecipeRow = BundleMeasurement & {
+type TonnageRecipeRow = BundleMeasurement & {
 	entry: string
 	name: string
 }

@@ -5,6 +5,7 @@ import { build, type BuildOptions, type Plugin } from "esbuild"
 
 import type { BundleMeasurement, BundlePlatform } from "./types.ts"
 
+/** @internal Exported for focused implementation tests. */
 export type MeasureImportsOptions = {
 	external?: readonly string[] | undefined
 	platform?: BundlePlatform | undefined
@@ -12,12 +13,14 @@ export type MeasureImportsOptions = {
 	target?: string | undefined
 }
 
+/** @internal Exported for focused implementation tests. */
 export type MeasureEntryOptions = MeasureImportsOptions
 
 type InternalMeasureOptions = MeasureImportsOptions & {
 	plugins?: readonly Plugin[]
 }
 
+/** @internal Exported for focused implementation tests. */
 export async function measureEntry(
 	entry: string,
 	options: MeasureEntryOptions,
@@ -35,6 +38,7 @@ export async function measureEntryWithPlugins(
 	)
 }
 
+/** @internal Exported for focused implementation tests. */
 export async function measureImports(
 	imports: readonly string[],
 	options: MeasureImportsOptions,

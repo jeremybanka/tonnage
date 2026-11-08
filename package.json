@@ -19,10 +19,13 @@
 		"test": "vp run -r test",
 		"test:breakage:peers": "pnpm build && pnpm --filter tonnage pack:breakage && pnpm --filter tonnage test:breakage:peers",
 		"test:watch": "vp run -r --parallel --no-cache test:watch",
-		"workflows:update": "./scripts/update-workflows.node.ts"
+		"workflows:update": "./scripts/update-workflows.node.ts",
+		"check:unused": "knip",
+		"check:unused:production": "knip --production"
 	},
 	"devDependencies": {
 		"@changesets/cli": "3.0.3",
+		"@changesets/config": "4.0.1",
 		"@dprint/json": "0.26.0",
 		"@dprint/markdown": "0.29.0",
 		"@dprint/oxc": "0.49.1",
@@ -30,9 +33,8 @@
 		"cspell": "10.4.1",
 		"dprint": "0.64.3",
 		"dprint-plugin-malva": "0.16.0",
-		"dprint-plugin-markup": "0.27.6",
 		"dprint-plugin-yaml": "0.6.0",
-		"tonnage": "workspace:*",
+		"knip": "6.44.1",
 		"typescript": "7.0.2",
 		"vite-plus": "catalog:"
 	},
