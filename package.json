@@ -30,7 +30,7 @@
 		"@dprint/markdown": "0.29.0",
 		"@dprint/oxc": "0.50.0",
 		"@dprint/toml": "0.10.0",
-		"cspell": "10.4.1",
+		"cspell": "10.5.0",
 		"dprint": "0.64.3",
 		"dprint-plugin-malva": "0.16.1",
 		"dprint-plugin-yaml": "0.6.0",
