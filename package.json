@@ -9,7 +9,7 @@
 		"check": "pnpm run \"/^check:.*/\"",
 		"check:docs": "pnpm build && pnpm --filter tonnage exec tsc --runExternalCode --project tsconfig.json && pnpm --filter tonnage exec galley check",
 		"check:fmt": "dprint check",
-		"check:vp": "vp check --no-fmt",
+		"check:vp": "vp check --no-fmt && tsc --project tsconfig.json",
 		"check:spelling": "cspell .",
 		"fmt": "dprint fmt",
 		"docs:write": "pnpm build && pnpm --filter tonnage exec galley write",

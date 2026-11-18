@@ -22,11 +22,11 @@ Following the [mise Node.js cookbook](https://mise.jdx.dev/mise-cookbook/nodejs.
 ## Static checks
 
 - `check:fmt`: `dprint check`.
-- `check:docs`: build the packages, type-check tonnage's README with the TypeScript 7.1 content mapper, and run `galley check` to verify its generated output.
-- `check:vp`: `vp check --no-fmt`.
+- `check:docs` builds the packages, uses TypeScript 7.1 to check Tonnage's source, tests, examples, and README with its content mapper, and runs `galley check` to verify the generated README.
+- `check:vp` runs Vite Plus linting and uses the workspace TypeScript compiler to check root configuration and scripts.
 - `check:spelling`: `cspell .`.
 
-`check:vp` runs linting and TypeScript typechecking through Vite Plus with `lint.options.typeAware` and `lint.options.typeCheck` enabled. `check:fmt` handles formatting separately.
+Vite Plus 1.7's bundled type checker cannot run content mappers. The package compiler in `check:docs` enables mapper execution with `--runExternalCode`.
 
 ## Migration
 
@@ -46,7 +46,7 @@ When changing peer support, update the current environment's Renovate `allowedVe
 
 Breakage compares peer requirements with the latest `tonnage@` release tag. The peer CI job fetches release history. Changesets supplies the planned version; a minor release before 1.0 or a major release certifies intentional support changes. Consumer assertion failures cannot be certified away. The package-level `pack:breakage` command creates the archive; the root peer command builds before packing.
 
-The consumer fixture uses `tsconfig.consumer.json` explicitly inside Breakage so its type check resolves the installed package. Keeping that config separate from automatic `tsconfig.json` discovery lets `check:vp` validate workspace source before a build.
+The consumer fixture uses `tsconfig.consumer.json` explicitly inside Breakage so its type check resolves the installed package. The package's `tsconfig.json` maps the same import to workspace source during `check:docs`.
 
 Breakage removes its disposable `test/` directory after each run. Do not run checks against the same representative concurrently; inspect any stage left by an interrupted process before removing it.
 
